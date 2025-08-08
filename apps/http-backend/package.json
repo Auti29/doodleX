@@ -8,16 +8,18 @@
     "dev": "npm run build && npm run start"
   },
   "devDependencies": {
+    "@repo/backend-common": "workspace:*",
+    "@repo/common": "workspace:*",
+    "@repo/db": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3", 
-    "@repo/backend-common": "workspace:*", 
-    "@repo/common": "workspace:*"
-
-  }, 
+    "@types/express": "^5.0.3"
+  },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "keywords": [],
   "author": "",
