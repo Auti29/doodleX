@@ -2,11 +2,10 @@ import { Request, Response } from "express";
 import { SigninSchema } from "@repo/common/types";
 import { prismaClient } from "@repo/db/client";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 dotenv.config();
-import { JWT_SECRET_KEY } from "@repo/backend-common/config";
-import bcrypt from "bcrypt";
-
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 export async function authSignin(req: Request, res: Response) {
     try{
@@ -38,7 +37,7 @@ export async function authSignin(req: Request, res: Response) {
             });
         }
         console.log("1");
-        const token = jwt.sign(findUser.id, JWT_SECRET_KEY!);
+        const token = jwt.sign({userId: findUser.id}, JWT_SECRET_KEY!);
         console.log("2");
     
         return res.status(200).json({

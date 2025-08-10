@@ -12,7 +12,7 @@ app.use(cors());
 //add zod schema from @repo/types 
 app.post("/api/v1/signup", authRegister);
 app.post("/api/v1/signin", authSignin);
-app.post("/api/v1/signup", authMiddleware, async (req, res) => {
+app.post("/api/v1/createRoom", authMiddleware, async (req, res) => {
     try{
 
         const parsedData = RoomSchema.safeParse(req.body);

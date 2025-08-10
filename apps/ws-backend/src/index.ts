@@ -24,13 +24,22 @@ wss.on('connection', (socket, request) => {
     const queryParams = new URLSearchParams(url.split("?")[1]);
     const token = queryParams.get('token'); 
     if(!token){
-        wss.close();
+        socket.close();
         return;
     } 
-    const authenticatedUser: string | null = checkUser(token);
+    const userId: string | null = checkUser(token);
+
+    if(!userId){
+        socket.close();
+        return;
+    }
+
+    
+
 
 
     socket.on('message', () => {
         socket.send("pong");
-    });
+    }); 
+
 });
