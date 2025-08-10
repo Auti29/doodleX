@@ -1,19 +1,33 @@
 import { WebSocketServer } from "ws";
-
-
+import jwt, { JwtPayload } from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const wss = new WebSocketServer({port: 8080});
 
+const checkUser: (arg: string) => string | null = (token: string) =>  {
+    const decoded = jwt.verify(token, JWT_SECRET_KEY!) as JwtPayload;
+
+    if(typeof (decoded) == "string") {
+        return null;
+    }
+    if(!decoded || !decoded.userId){
+        return null;
+    }
+    return decoded.userId;
+}
+
 wss.on('connection', (socket, request) => {
-    //get the jwt token from the url params and check if the user is signed in if yes only then allow to connect to ws 
     const url = request.url;
     if(!url) return;
     const queryParams = new URLSearchParams(url.split("?")[1]);
-    const token = queryParams.get('token'); //got the jwt 
-
-    //decode the token and verify it with secretkey
-    //db call to check the signedin status of user 
-    //if the user is not signin in close the wss => socket.close();
+    const token = queryParams.get('token'); 
+    if(!token){
+        wss.close();
+        return;
+    } 
+    const authenticatedUser: string | null = checkUser(token);
 
 
     socket.on('message', () => {
