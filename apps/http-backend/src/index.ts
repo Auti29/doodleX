@@ -81,4 +81,30 @@ app.get('/api/v1/chats/:roomId', authMiddleware,  async (req, res) => {
 
 });
 
+
+app.get('/api/v1/room/slug', authMiddleware,  async (req, res) => {
+  const slug = req.params.slug;
+ try { 
+  const room = await prismaClient.room.findFirst({
+    where: {
+        slug
+    }
+  });
+
+  return res.status(200).json({
+    message: "success", 
+    room
+    
+  });
+} catch(e){
+    console.log("error occurred: ", e);
+    return res.status(500).json({
+        message: "internal server error!!"
+    });
+}
+
+});
+
+
+
 app.listen(3001);
