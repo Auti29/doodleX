@@ -55,4 +55,30 @@ app.post("/api/v1/createRoom", authMiddleware, async (req, res) => {
     }
 });
 
+app.get('/api/v1/chats/:roomId', authMiddleware,  async (req, res) => {
+  const roomId = Number(req.params.roomId);
+ try { 
+  const messages = await prismaClient.chat.findMany({
+    where: {
+        roomId
+    }, 
+    orderBy: {
+        id: "desc"
+    },
+    take: 50
+  });
+
+  return res.status(200).json({
+    message: "success", 
+    messages
+  });
+} catch(e){
+    console.log("error occurred: ", e);
+    return res.status(500).json({
+        message: "internal server error!!"
+    });
+}
+
+});
+
 app.listen(3001);
