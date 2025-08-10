@@ -1,4 +1,4 @@
-import { JWT_SECRET } from "@repo/backend-common/config";
+import { JWT_SECRET_KEY } from "@repo/backend-common/config";
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
@@ -22,7 +22,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction){
     });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET!) as JwtPayload;
+    const decoded = jwt.verify(token, JWT_SECRET_KEY!) as JwtPayload;
 
     if(!decoded){
         return res.status(401).json({

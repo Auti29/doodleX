@@ -2,7 +2,11 @@ import { Request, Response } from "express";
 import { SigninSchema } from "@repo/common/types";
 import { prismaClient } from "@repo/db/client";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "@repo/backend-common/config";
+import dotenv from "dotenv";
+dotenv.config();
+import { JWT_SECRET_KEY } from "@repo/backend-common/config";
+import bcrypt from "bcrypt";
+
 
 export async function authSignin(req: Request, res: Response) {
     try{
@@ -25,8 +29,17 @@ export async function authSignin(req: Request, res: Response) {
                 message: "accout missing, sign up to create an account!!"
             });
         }
-    
-        const token = jwt.sign(findUser.id, JWT_SECRET!);
+
+
+        const isVerified = await bcrypt.compare(parsedData.data.password, findUser.password);
+        if(!isVerified){
+            return res.status(404).json({
+                message: "wrong credentials!!!!"
+            });
+        }
+        console.log("1");
+        const token = jwt.sign(findUser.id, JWT_SECRET_KEY!);
+        console.log("2");
     
         return res.status(200).json({
             message: "singin done!!", 

@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
-import {JWT_SECRET} from "@repo/backend-common/config";
 import {CreateUserSchema} from "@repo/common/types";
 import { prismaClient } from "@repo/db/client";
+import bcrypt from "bcrypt";
 
 export async function authRegister(req: Request, res: Response) {
     try{
@@ -24,7 +24,10 @@ export async function authRegister(req: Request, res: Response) {
                 message: "user already exists with this email!!"
             });
         }
-    
+        
+        const hashedPassword = await bcrypt.hash(parsedData.data.password, 8);
+        parsedData.data.password = hashedPassword;
+
         await prismaClient.user.create({
             data: parsedData.data
         });
