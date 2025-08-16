@@ -77,7 +77,7 @@ wss.on('connection', (socket, request) => {
             //todo: put db call in queue pipeline later
             await prismaClient.chat.create({
                 data: {
-                    roomId, 
+                    roomId: Number(roomId), 
                     message, 
                     userId
                 }

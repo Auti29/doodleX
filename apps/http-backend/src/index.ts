@@ -9,6 +9,7 @@ import { prismaClient } from "@repo/db/client";
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 //add zod schema from @repo/types 
 app.post("/api/v1/signup", authRegister);
 app.post("/api/v1/signin", authSignin);
@@ -64,8 +65,7 @@ app.get('/api/v1/chats/:roomId', authMiddleware,  async (req, res) => {
     }, 
     orderBy: {
         id: "desc"
-    },
-    take: 50
+    }
   });
 
   return res.status(200).json({

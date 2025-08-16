@@ -1,3 +1,4 @@
+
 import AuthPageCard from "../../app/components/AuthPageCard"
 
 export default function Signup() {

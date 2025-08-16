@@ -1,4 +1,4 @@
-
+"use client"
 interface AuthI {
     isSignup: boolean, 
     buttonTxt: string, 
