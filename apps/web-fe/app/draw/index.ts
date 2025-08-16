@@ -24,9 +24,9 @@ export default async function drawShape(canvas: HTMLCanvasElement, roomId: strin
 
     //todo: put this in a global state store (zustand/recoil) or use singleton
     let existingShapes: Shape[] = await getExistingShapes(roomId);
-
     if(!cxt) return; 
 
+    
     //put shape to ws server
     socket.onmessage = (ev) => {
         const msg = JSON.parse(ev.data);
@@ -34,7 +34,7 @@ export default async function drawShape(canvas: HTMLCanvasElement, roomId: strin
         if(msg.type === "chat"){
             //todo: race cocndition  might happen fix later 
             const parsedMsg = JSON.parse(msg.message);
-            existingShapes.push(parsedMsg);
+            existingShapes.push(parsedMsg.shape);
             clearAndPopulateCanvas(existingShapes, cxt, canvas);
         }
     }
@@ -72,7 +72,8 @@ export default async function drawShape(canvas: HTMLCanvasElement, roomId: strin
             message: JSON.stringify({
                 shape: currShape
             })
-        }))
+        }));
+        clearAndPopulateCanvas(existingShapes, cxt, canvas);
     });
 
     canvas.addEventListener("mousemove", (e) => {
@@ -102,15 +103,13 @@ function clearAndPopulateCanvas(existingShapes: Shape[], cxt: CanvasRenderingCon
 
 
 async function getExistingShapes(roomId:  string){
-    const res = await axios.get(`http://localhost:3001/api/v1/chats/${roomId}`, {
+    const res = await axios.get(`${BACKEND_API}/api/v1/chats/${roomId}`, {
         headers: {
         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Njc3MDliZi1jNTc5LTRkODAtOGU3Ny1mYTlmOWI3ZGQyOGUiLCJpYXQiOjE3NTUzNzk4ODl9.asLaE3_7E72nYu07hHtcj7uOO0A1hOzmtbIwCSCggwM`,  
       },
 
     });
     const messages = res.data.messages;
-
-    console.log(messages);
     const shapes = messages.map((m: any) => {
         const parsedMessage = JSON.parse(m.message);
         return parsedMessage.shape;

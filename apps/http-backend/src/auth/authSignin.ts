@@ -36,14 +36,15 @@ export async function authSignin(req: Request, res: Response) {
                 message: "wrong credentials!!!!"
             });
         }
-        console.log("1");
+
+
         const token = jwt.sign({userId: findUser.id}, JWT_SECRET_KEY!);
-        console.log("2");
     
         return res.status(200).json({
             message: "singin done!!", 
             token
         });
+        
     }catch(err){
         console.log("error: ", err);
         return res.status(500).json({
