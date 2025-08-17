@@ -3,33 +3,35 @@
 import { useEffect, useRef, useState } from "react";
 import drawShape from "../draw";
 import TopBar from "./TopBar";
+import { Game } from "../draw/Game";
 
-export enum Tools {
-    Line= "Line", 
-    Circle="Circle", 
-    Rect="Rect"
-}
+export type Tools = "Circle" | "Rect" | "Line";
 
 export default function Canvas({roomId, socket} : {
     roomId: string, 
     socket: WebSocket    
 }) {
         const canvasRef = useRef<HTMLCanvasElement | null>(null);
-        const [selectedTool, setSelectedTool] = useState<string>(Tools.Rect);
+        const [game, setGame] = useState<Game>();
+        const [selectedTool, setSelectedTool] = useState<Tools>("Rect");
 
         useEffect(() => {
-            // @ts-ignore
-            window.selectedTool = selectedTool;
+            game?.setTool(selectedTool);
         }, [selectedTool]);
 
 
         useEffect(() => {
         if(canvasRef.current){
             const canvas = canvasRef.current;
-            //this wont resize with the window use inbuilt react hook for that later 
+            //this won't resize with the window use inbuilt react hook for that later 
             canvas.width = window.innerWidth;
             canvas.height =  window.innerHeight;
-            drawShape(canvas, roomId, socket);
+            const g = new Game(canvas, roomId, socket);
+            setGame(g);     
+            
+            return () => {
+                g.destroy();
+            }
         }
     }, [canvasRef]);
 
