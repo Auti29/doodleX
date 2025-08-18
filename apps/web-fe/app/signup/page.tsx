@@ -1,6 +1,4 @@
 "use client";
-
-
 import axios from "axios"
 import AuthPageCard from "../../app/components/AuthPageCard"
 import { useRouter } from "next/navigation";

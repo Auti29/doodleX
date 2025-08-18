@@ -24,7 +24,7 @@ export default function CreateRoomComponent() {
             room: roomName}
         ,   
         {headers: {
-        Authorization: token ?`Bearer ${token}` : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Njc3MDliZi1jNTc5LTRkODAtOGU3Ny1mYTlmOWI3ZGQyOGUiLCJpYXQiOjE3NTUzNzk4ODl9.asLaE3_7E72nYu07hHtcj7uOO0A1hOzmtbIwCSCggwM",  
+        Authorization:`Bearer ${token}`
       }});
 
       const data = res.data;

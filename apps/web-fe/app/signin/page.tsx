@@ -3,10 +3,12 @@
 
 import axios from "axios"
 import AuthPageCard from "../../app/components/AuthPageCard"
+import { useRouter } from "next/navigation";
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
 
 
 export default function Signin() {
+    const router = useRouter();
 
     async function handleSigninClick(username: string, password: string){
       try { 
@@ -20,6 +22,7 @@ export default function Signin() {
         if(res.status === 200){
             localStorage.setItem("token", res.data.token);
             alert(res.data.message);
+            router.push('/dashboard');
         }
         else{
             alert(res.data.message);

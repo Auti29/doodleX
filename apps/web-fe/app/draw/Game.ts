@@ -43,7 +43,7 @@ export class Game {
 
 
     destroy() {
-           this.canvas.removeEventListener("mousedown", this.mouseDownHandler);
+        this.canvas.removeEventListener("mousedown", this.mouseDownHandler);
 
         this.canvas.removeEventListener("mouseup", this.mouseUpHandler);
 

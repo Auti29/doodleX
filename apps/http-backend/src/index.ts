@@ -106,5 +106,38 @@ app.get('/api/v1/room/slug', authMiddleware,  async (req, res) => {
 });
 
 
+app.get('/api/v1/getUser', authMiddleware, async (req, res) => {
+   try{ const userId = (req as authRequest).userId;
+
+    const user = await prismaClient.user.findFirst({
+        where: {
+            id: userId
+        }
+    });
+
+    if(!user) return res.status(403).json({
+        message: "signin in first to access this endpoint!!"
+    });
+
+    return res.status(200).json({
+        message: 'success', 
+        user: {
+            userId: user.id, 
+            username: user.username, 
+            email: user.email, 
+        }
+    });
+}
+catch(err){
+    console.log(err);
+    return res.status(500).json({
+        message: "internal server error!!"
+    });
+}
+
+});
+
+
+
 
 app.listen(3001);
