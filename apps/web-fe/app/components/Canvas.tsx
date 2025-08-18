@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react";
-import drawShape from "../draw";
 import TopBar from "./TopBar";
 import { Game } from "../draw/Game";
 

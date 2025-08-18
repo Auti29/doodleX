@@ -1,4 +1,4 @@
-import { RawData, WebSocket, WebSocketServer } from "ws";
+import { WebSocket, WebSocketServer } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prismaClient } from "@repo/db/client";
 import dotenv from "dotenv";
