@@ -12,7 +12,7 @@ export default function IconBtn({
     return (
         <div
         onClick={onClick} 
-        className={`m-2 bg-black font-bold text-mg border border-white rounded-full p-2 hover:bg-gray-600 ${activated ? "text-red-400" : "text-white"}`}>
+        className={`m-0.5 border-0 rounded-md font-bold text-mg p-2 hover:bg-gray-600 text-white ${activated ? "bg-gray-600" : "bg-slate-800"}`}>
             {icon}
         </div>
     )

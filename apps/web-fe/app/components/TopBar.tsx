@@ -1,41 +1,40 @@
-import { Circle, Eraser, EraserIcon, PencilLineIcon, PenIcon, RectangleHorizontalIcon } from "lucide-react";
+import { Circle,  EraserIcon, Minus, PencilLineIcon, PenIcon, RectangleHorizontalIcon } from "lucide-react";
 import IconBtn from "./IconBtn";
 import { Dispatch, SetStateAction } from "react";
 import { Tools } from "./Canvas";
-import LineIcon from "./icons/LineIcon";
 
 export default function TopBar({selectedTool, setSelectedTool}: {selectedTool: string, setSelectedTool: Dispatch<SetStateAction<Tools>>}) {
     return ( 
-        <div className="border border-white fixed text-white top-5 flex w-fit gap-1.5 pt-2 pb-2 pl-3 pr-3 rounded-lg left-5">
+        <div className="bg-slate-800 borde-0 fixed text-black top-5 flex w-fit gap-1.5 p-1 rounded-lg left-5 text-sm justify-center items-center">
                 <IconBtn 
-                icon={<LineIcon />}
+                icon={<Minus size={15}/>}
                 activated={selectedTool === "Line"}
                 onClick={() => setSelectedTool("Line")}
                 />
                 <IconBtn 
-                icon={<RectangleHorizontalIcon />}
+                icon={<RectangleHorizontalIcon size={15}/>}
                 onClick={()=> setSelectedTool("Rect")}
                 activated = {selectedTool === "Rect"}
                 />
                 <IconBtn 
-                icon={<Circle />}
+                icon={<Circle size={15}/>}
                 onClick={() => setSelectedTool("Circle")}
                 activated = {selectedTool === "Circle"}
                 />
                 <IconBtn 
                 icon={"A"}
-                onClick={() => setSelectedTool("Circle")}
-                activated = {selectedTool === "Circle"}
+                onClick={() => setSelectedTool("Text")}
+                activated = {selectedTool === "Text"}
                 />
                 <IconBtn 
-                icon={<PenIcon />}
-                onClick={() => setSelectedTool("Circle")}
-                activated = {selectedTool === "Circle"}
+                icon={<PenIcon size={15}/>}
+                onClick={() => setSelectedTool("Pensil")}
+                activated = {selectedTool === "Pensil"}
                 />
                 <IconBtn 
-                icon={<EraserIcon />}
-                onClick={() => setSelectedTool("Circle")}
-                activated = {selectedTool === "Circle"}
+                icon={<EraserIcon size={15}/>}
+                onClick={() => setSelectedTool("Eraser")}
+                activated = {selectedTool === "Eraser"}
                 />
             </div>
     )

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import TopBar from "./TopBar";
 import { Game } from "../draw/Game";
 
-export type Tools = "Circle" | "Rect" | "Line";
+export type Tools = "Circle" | "Rect" | "Line" | "Text" | "Eraser" | "Pensil";
 
 export default function Canvas({roomId, socket} : {
     roomId: string, 

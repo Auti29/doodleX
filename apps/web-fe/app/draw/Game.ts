@@ -14,6 +14,13 @@ type Shape = {
     centerY: number, 
     radius: number
 
+} | 
+{
+    type: "line",
+    startX: number, 
+    startY: number, 
+    endX: number, 
+    endY: number, 
 }
 
 
@@ -89,6 +96,13 @@ export class Game {
                 this.cxt.stroke();
                 this.cxt.closePath();
             }
+            else if(shape.type === "line"){
+                this.cxt.beginPath();
+                this.cxt.moveTo(shape.startX, shape.startY);
+                this.cxt.lineTo(shape.endX, shape.endY);
+                this.cxt.stroke();
+                this.cxt.closePath();
+            }
         })
         }
     
@@ -101,6 +115,8 @@ export class Game {
 
     mouseUpHandler = (e: MouseEvent) => {
         this.clickedFlag = false;
+        const endX = e.clientX;
+        const endY = e.clientY;
         const width = e.clientX - this.startX;
         const height = e.clientY - this.startY;
         let currShape: Shape | null = null;
@@ -121,8 +137,16 @@ export class Game {
             centerY: this.startY + radius, 
             radius: radius
         }
-        
-         }
+        }
+        else if(this.selectedTool === "Line"){
+            currShape = {
+                type: "line", 
+                startX: this.startX, 
+                startY: this.startY, 
+                endX, 
+                endY
+            }
+        }
     
         if(!currShape) return;
         this.existingShapes.push(currShape);    
@@ -159,6 +183,15 @@ export class Game {
                 this.cxt.arc(centerX, centerY, radius, 0, Math.PI * 2);
                 this.cxt.stroke();
                 this.cxt.closePath();
+            }
+            else if(selectedTool === "Line"){
+                const endX = e.clientX;
+                const endY = e.clientY;
+                this.cxt.beginPath();
+                this.cxt.moveTo(this.startX, this.startY);
+                this.cxt.lineTo(endX, endY);
+                this.cxt.stroke();
+                                this.cxt.closePath();
             }
     }
     }
