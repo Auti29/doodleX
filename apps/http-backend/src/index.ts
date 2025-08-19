@@ -112,6 +112,9 @@ app.get('/api/v1/getUser', authMiddleware, async (req, res) => {
     const user = await prismaClient.user.findFirst({
         where: {
             id: userId
+        }, 
+        include:{
+            rooms: true
         }
     });
 
@@ -125,6 +128,7 @@ app.get('/api/v1/getUser', authMiddleware, async (req, res) => {
             userId: user.id, 
             username: user.username, 
             email: user.email, 
+            rooms: user.rooms
         }
     });
 }

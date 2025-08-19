@@ -1,13 +1,14 @@
-import { Circle, PencilLineIcon, RectangleHorizontalIcon } from "lucide-react";
+import { Circle, Eraser, EraserIcon, PencilLineIcon, PenIcon, RectangleHorizontalIcon } from "lucide-react";
 import IconBtn from "./IconBtn";
 import { Dispatch, SetStateAction } from "react";
 import { Tools } from "./Canvas";
+import LineIcon from "./icons/LineIcon";
 
 export default function TopBar({selectedTool, setSelectedTool}: {selectedTool: string, setSelectedTool: Dispatch<SetStateAction<Tools>>}) {
     return ( 
-        <div className="fixed text-white top-10 left-10 flex gap-1.5">
+        <div className="border border-white fixed text-white top-5 flex w-fit gap-1.5 pt-2 pb-2 pl-3 pr-3 rounded-lg left-5">
                 <IconBtn 
-                icon={<PencilLineIcon />}
+                icon={<LineIcon />}
                 activated={selectedTool === "Line"}
                 onClick={() => setSelectedTool("Line")}
                 />
@@ -18,6 +19,21 @@ export default function TopBar({selectedTool, setSelectedTool}: {selectedTool: s
                 />
                 <IconBtn 
                 icon={<Circle />}
+                onClick={() => setSelectedTool("Circle")}
+                activated = {selectedTool === "Circle"}
+                />
+                <IconBtn 
+                icon={"A"}
+                onClick={() => setSelectedTool("Circle")}
+                activated = {selectedTool === "Circle"}
+                />
+                <IconBtn 
+                icon={<PenIcon />}
+                onClick={() => setSelectedTool("Circle")}
+                activated = {selectedTool === "Circle"}
+                />
+                <IconBtn 
+                icon={<EraserIcon />}
                 onClick={() => setSelectedTool("Circle")}
                 activated = {selectedTool === "Circle"}
                 />
