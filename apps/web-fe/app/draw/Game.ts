@@ -21,7 +21,16 @@ type Shape = {
     startY: number, 
     endX: number, 
     endY: number, 
+} | {
+    type: "pencil", 
+    lines: {
+    startX: number, 
+    startY: number, 
+    endX: number, 
+    endY: number, 
+    }[]
 }
+
 
 
 export class Game {
@@ -32,6 +41,13 @@ export class Game {
     socket: WebSocket;
     private clickedFlag: boolean;
     private startX = 0;
+    private lines: {
+    startX: number, 
+    startY: number, 
+    endX: number, 
+    endY: number, 
+    }[]  = [];
+    private lineObj = {x:0 ,y:0};
     private startY = 0;
     private selectedTool: Tools = "Rect";
 
@@ -103,14 +119,30 @@ export class Game {
                 this.cxt.stroke();
                 this.cxt.closePath();
             }
+            else if(shape.type === "pencil"){
+                shape.lines.map(l => {
+                this.cxt.beginPath();
+                this.cxt.lineWidth = 3;
+                this.cxt.lineCap = "round";
+                this.cxt.moveTo(l.startX, l.startY);
+                this.cxt.lineTo(l.endX, l.endY);
+                this.cxt.stroke();
+                this.cxt.closePath();
+                })
+            }
         })
         }
     
 
     mouseDownHandler = (e: MouseEvent) => {
          this.clickedFlag = true;
-            this.startX = e.clientX;
-            this.startY = e.clientY;
+        this.startX = e.clientX;
+        this.startY = e.clientY;
+        if(this.selectedTool === "Pencil"){
+            this.lineObj.x = e.clientX;
+            this.lineObj.y = e.clientY;
+        }
+
     }
 
     mouseUpHandler = (e: MouseEvent) => {
@@ -145,6 +177,12 @@ export class Game {
                 startY: this.startY, 
                 endX, 
                 endY
+            }
+        }
+        else if(this.selectedTool === "Pencil"){
+            currShape = {
+                type: "pencil", 
+                lines: this.lines
             }
         }
     
@@ -191,7 +229,29 @@ export class Game {
                 this.cxt.moveTo(this.startX, this.startY);
                 this.cxt.lineTo(endX, endY);
                 this.cxt.stroke();
-                                this.cxt.closePath();
+                this.cxt.closePath();
+            }
+            else if(selectedTool === "Pencil"){
+                const startX = this.lineObj.x;
+                const startY = this.lineObj.y;
+                const endX = e.clientX;
+                const endY = e.clientY;
+                console.log(e.clientX, e.clientY);
+                this.cxt.beginPath();
+                this.cxt.lineWidth = 3;
+                this.cxt.lineCap = "round";
+                this.cxt.moveTo(this.lineObj.x, this.lineObj.y);
+                this.lines.push({
+                    startX, 
+                    startY, 
+                    endX, 
+                    endY
+                });
+                this.lineObj.x = endX;
+                this.lineObj.y = endY;
+                this.cxt.lineTo(this.lineObj.x, this.lineObj.y);
+                this.cxt.stroke();
+                this.cxt.closePath();
             }
     }
     }

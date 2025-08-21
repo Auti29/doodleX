@@ -28,8 +28,8 @@ export default function TopBar({selectedTool, setSelectedTool}: {selectedTool: s
                 />
                 <IconBtn 
                 icon={<PenIcon size={15}/>}
-                onClick={() => setSelectedTool("Pensil")}
-                activated = {selectedTool === "Pensil"}
+                onClick={() => setSelectedTool("Pencil")}
+                activated = {selectedTool === "Pencil"}
                 />
                 <IconBtn 
                 icon={<EraserIcon size={15}/>}
