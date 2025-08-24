@@ -13,7 +13,7 @@ type Shape = {
     centerX: number, 
     centerY: number, 
     radius: number
-
+    
 } | 
 {
     type: "line",
@@ -31,11 +31,16 @@ type Shape = {
     }[]
 }
 
+// type ShapeObj = {
+//     id: string, 
+//     shape: Shape
+// }
 
 
 export class Game {
     private canvas: HTMLCanvasElement;
     private cxt: CanvasRenderingContext2D;
+    private chatId = null;
     private existingShapes: Shape[];
     private roomId: string;
     socket: WebSocket;
@@ -52,6 +57,25 @@ export class Game {
     private startX = 0;
     private startY = 0;
     private selectedTool: Tools = "Rect";
+
+    private isSameShape(a: Shape, b: Shape): boolean {
+    if(a.type !== b.type) return false;
+
+    if(a.type === "rect" && b.type === "rect"){
+        return a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height;
+    }
+    if(a.type === "circle" && b.type === "circle"){
+        return a.centerX === b.centerX && a.centerY === b.centerY && a.radius === b.radius;
+    }
+    if(a.type === "line" && b.type === "line"){
+        return a.startX === b.startX && a.startY === b.startY && a.endX === b.endX && a.endY === b.endY;
+    }
+    if(a.type === "pencil" && b.type === "pencil"){
+        return JSON.stringify(a.lines) === JSON.stringify(b.lines);
+    }
+    return false;
+}
+
 
 
     constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
@@ -93,8 +117,12 @@ export class Game {
             //todo: race cocndition  might happen fix later 
             const parsedMsg = JSON.parse(msg.message);
             this.existingShapes.push(parsedMsg.shape);
-            this.clearAndPopulateCanvas();
         }
+        if(msg.type === "deleteChat"){
+            const parsedMsg = JSON.parse(msg.message);
+            this.existingShapes = this.existingShapes.filter(s => !this.isSameShape(s, parsedMsg.shape));
+        }
+        this.clearAndPopulateCanvas();
     }
     }
 
@@ -105,24 +133,24 @@ export class Game {
         // this.cxt.lineWidth = 5;
 
         this.existingShapes.map((shape) => {
-            if(shape.type === "rect"){
+            if(shape && shape.type === "rect"){
                 this.cxt.strokeStyle = "rgba(255, 255, 255)"; 
                 this.cxt.strokeRect(shape.x, shape.y, shape.width, shape.height);
             }
-            else if(shape.type === "circle"){
+            else if(shape && shape.type === "circle"){
                 this.cxt.beginPath();
                 this.cxt.arc(shape.centerX, shape.centerY, Math.abs(shape.radius), 0, Math.PI * 2);
                 this.cxt.stroke();
                 this.cxt.closePath();
             }
-            else if(shape.type === "line"){
+            else if(shape && shape.type === "line"){
                 this.cxt.beginPath();
                 this.cxt.moveTo(shape.startX, shape.startY);
                 this.cxt.lineTo(shape.endX, shape.endY);
                 this.cxt.stroke();
                 this.cxt.closePath();
             }
-            else if(shape.type === "pencil"){
+            else if(shape && shape.type === "pencil"){
                 shape.lines.map(l => {
                 this.cxt.beginPath();
                 this.cxt.lineWidth = 1;
@@ -153,45 +181,6 @@ export class Game {
 
     }
 
-    eraseShape = () => {
-        console.log("eraser: ", this.eraserX, this.eraserY);
-        let eraseFlag = false;
-        let i;
-        let shape: Shape;
-        for(i = 0;i<this.existingShapes.length;i++){
-           shape = this.existingShapes[i];
-            if(shape.type === "rect"){
-                //top boundary 
-                if(this.eraserY == shape.y && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
-                    eraseFlag = true;
-                    console.log("top");
-                    break;
-                }
-                //bottom boundary 
-                if(this.eraserY == shape.y+shape.height && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
-                    eraseFlag = true;
-                    console.log("bottom");
-                    break;
-                }
-                //left boundary
-                if(this.eraserX == shape.x && (this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
-                    eraseFlag = true;
-                    console.log("left");
-                    break;
-                }
-                //right boundary
-                if(this.eraserX == shape.x+shape.width &&(this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
-                    eraseFlag = true;
-                    console.log("right");
-                    break;
-                }
-            }
-        }
-        if(eraseFlag){
-            this.existingShapes = this.existingShapes.filter(s => s != shape);
-            this.clearAndPopulateCanvas();
-        }
-}
 
     mouseUpHandler = (e: MouseEvent) => {
         this.clickedFlag = false;
@@ -244,9 +233,7 @@ export class Game {
             message: JSON.stringify({
                 shape: currShape
             })
-        }));
-        this.clearAndPopulateCanvas();
-    
+        }));    
     }
 
     mouseMoveHandler = (e: MouseEvent)  => {
@@ -311,4 +298,46 @@ export class Game {
         this.canvas.addEventListener("mousemove", this.mouseMoveHandler);
     }
 
+    eraseShape = () => {
+        let eraseFlag = false;
+        let i;
+        let shape: Shape;
+        for(i = 0;i<this.existingShapes.length;i++){
+           shape = this.existingShapes[i];
+            if(shape && shape.type === "rect"){
+                //top boundary 
+                if(this.eraserY == shape.y && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
+                    eraseFlag = true;
+                    break;
+                }
+                //bottom boundary 
+                if(this.eraserY == shape.y+shape.height && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
+                    eraseFlag = true;
+                    break;
+                }
+                //left boundary
+                if(this.eraserX == shape.x && (this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
+                    eraseFlag = true;
+                    break;
+                }
+                //right boundary
+                if(this.eraserX == shape.x+shape.width &&(this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
+                    eraseFlag = true;
+                    break;
+                }
+            }
+        }
+                if(eraseFlag){
+            this.existingShapes = this.existingShapes.filter(s => s != shape);
+            this.clearAndPopulateCanvas();
+            this.socket.send(JSON.stringify({
+            type: "deleteChat", 
+            roomId: this.roomId, 
+            message: JSON.stringify({
+              shape: shape!  
+            })
+        }));
+        this.clearAndPopulateCanvas();
+        }
+}
 };

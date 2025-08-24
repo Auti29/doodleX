@@ -74,21 +74,58 @@ wss.on('connection', (socket, request) => {
             const roomId = parsedData.roomId;
             const message = parsedData.message;
 
-            //todo: put db call in queue pipeline later
-            await prismaClient.chat.create({
-                data: {
-                    roomId: Number(roomId), 
-                    message, 
-                    userId
-                }
-            })
+
+            try{
+                //todo: put db call in queue pipeline later
+                const createdChat = await prismaClient.chat.create({
+                    data: {
+                        roomId: Number(roomId), 
+                        message, 
+                        userId
+                    }
+                });
+                users.forEach(user => {
+                    if(user.rooms.includes(roomId)) {
+                        user.ws.send(JSON.stringify({
+                            type: "chat", 
+                            message, 
+                            roomId, 
+                            chatId: createdChat.id
+                        }));
+                    }
+                });
+            }
+            catch(err){
+                console.log("error on ws server", err);
+                return;
+            }
+
+        }
+
+        if(parsedData.type === "deleteChat"){
+            const roomId = parsedData.roomId;
+            const message = parsedData.message;
+            const shape= JSON.parse(message).shape;
+
+            try{
+                //todo: put db call in queue pipeline later
+                await prismaClient.chat.deleteMany({
+                        where: {
+                            roomId: Number(roomId), 
+                            message: JSON.stringify({shape: shape}),
+                            userId
+                        }
+                });
+            }catch(e){
+                console.log("error on ws server: ", e);
+                return;
+            }
 
             users.forEach(user => {
                 if(user.rooms.includes(roomId)) {
                     user.ws.send(JSON.stringify({
-                        type: "chat", 
-                        message, 
-                        roomId
+                        type: "deleteChat", 
+                        message: message
                     }));
                 }
             });
@@ -127,6 +164,12 @@ wss.on('connection', (socket, request) => {
 //chat message 
 // {
 //     type: chat, 
+//     roomId: "abc123", 
+//      message: "ping pong"
+// }
+//delete chat message 
+// {
+//     type: deleteChat, 
 //     roomId: "abc123", 
 //      message: "ping pong"
 // }
