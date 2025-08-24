@@ -40,14 +40,16 @@ export class Game {
     private roomId: string;
     socket: WebSocket;
     private clickedFlag: boolean;
-    private startX = 0;
     private lines: {
-    startX: number, 
-    startY: number, 
-    endX: number, 
-    endY: number, 
+        startX: number, 
+        startY: number, 
+        endX: number, 
+        endY: number, 
     }[]  = [];
     private lineObj = {x:0 ,y:0};
+    private eraserX = 0;
+    private eraserY = 0;
+    private startX = 0;
     private startY = 0;
     private selectedTool: Tools = "Rect";
 
@@ -100,6 +102,7 @@ export class Game {
         this.cxt.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.cxt.fillStyle = "rgba(0, 0, 0)";
         this.cxt.fillRect(0,0,this.canvas.width, this.canvas.height);
+        // this.cxt.lineWidth = 5;
 
         this.existingShapes.map((shape) => {
             if(shape.type === "rect"){
@@ -122,28 +125,73 @@ export class Game {
             else if(shape.type === "pencil"){
                 shape.lines.map(l => {
                 this.cxt.beginPath();
-                this.cxt.lineWidth = 3;
+                this.cxt.lineWidth = 1;
                 this.cxt.lineCap = "round";
                 this.cxt.moveTo(l.startX, l.startY);
                 this.cxt.lineTo(l.endX, l.endY);
                 this.cxt.stroke();
                 this.cxt.closePath();
-                })
+                });
             }
         })
         }
     
 
     mouseDownHandler = (e: MouseEvent) => {
-         this.clickedFlag = true;
+        this.clickedFlag = true;
         this.startX = e.clientX;
         this.startY = e.clientY;
         if(this.selectedTool === "Pencil"){
             this.lineObj.x = e.clientX;
             this.lineObj.y = e.clientY;
         }
+        else if(this.selectedTool === "Eraser"){
+            this.eraserX = e.clientX;
+            this.eraserY = e.clientY;
+            this.eraseShape();
+        }
 
     }
+
+    eraseShape = () => {
+        console.log("eraser: ", this.eraserX, this.eraserY);
+        let eraseFlag = false;
+        let i;
+        let shape: Shape;
+        for(i = 0;i<this.existingShapes.length;i++){
+           shape = this.existingShapes[i];
+            if(shape.type === "rect"){
+                //top boundary 
+                if(this.eraserY == shape.y && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
+                    eraseFlag = true;
+                    console.log("top");
+                    break;
+                }
+                //bottom boundary 
+                if(this.eraserY == shape.y+shape.height && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
+                    eraseFlag = true;
+                    console.log("bottom");
+                    break;
+                }
+                //left boundary
+                if(this.eraserX == shape.x && (this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
+                    eraseFlag = true;
+                    console.log("left");
+                    break;
+                }
+                //right boundary
+                if(this.eraserX == shape.x+shape.width &&(this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
+                    eraseFlag = true;
+                    console.log("right");
+                    break;
+                }
+            }
+        }
+        if(eraseFlag){
+            this.existingShapes = this.existingShapes.filter(s => s != shape);
+            this.clearAndPopulateCanvas();
+        }
+}
 
     mouseUpHandler = (e: MouseEvent) => {
         this.clickedFlag = false;
@@ -236,9 +284,8 @@ export class Game {
                 const startY = this.lineObj.y;
                 const endX = e.clientX;
                 const endY = e.clientY;
-                console.log(e.clientX, e.clientY);
                 this.cxt.beginPath();
-                this.cxt.lineWidth = 3;
+                this.cxt.lineWidth = 1;
                 this.cxt.lineCap = "round";
                 this.cxt.moveTo(this.lineObj.x, this.lineObj.y);
                 this.lines.push({
