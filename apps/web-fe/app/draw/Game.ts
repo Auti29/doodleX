@@ -302,32 +302,64 @@ export class Game {
         let eraseFlag = false;
         let i;
         let shape: Shape;
+        const tolerance = 3;
         for(i = 0;i<this.existingShapes.length;i++){
            shape = this.existingShapes[i];
             if(shape && shape.type === "rect"){
                 //top boundary 
-                if(this.eraserY == shape.y && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
+                if((Math.abs(this.eraserY - shape.y) <= tolerance) && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
                     eraseFlag = true;
                     break;
                 }
                 //bottom boundary 
-                if(this.eraserY == shape.y+shape.height && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
+                if((Math.abs(this.eraserY - (shape.y+shape.height)) <= tolerance) && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
                     eraseFlag = true;
                     break;
                 }
                 //left boundary
-                if(this.eraserX == shape.x && (this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
+                if((Math.abs(this.eraserX - shape.x) <= tolerance) && (this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
                     eraseFlag = true;
                     break;
                 }
                 //right boundary
-                if(this.eraserX == shape.x+shape.width &&(this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
+                if((Math.abs(this.eraserX - (shape.x+shape.width)) <= tolerance) &&(this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
                     eraseFlag = true;
                     break;
                 }
             }
+            else if(shape && shape.type === "circle"){
+                const distance = Math.sqrt(
+                    (this.eraserX - shape.centerX) ** 2 +
+                    (this.eraserY - shape.centerY) ** 2
+                );
+                if(Math.abs(distance-shape.radius) <= tolerance){
+                    eraseFlag = true;
+                    break;
+                }
+
+            }
+            else if(shape && shape.type === "line"){
+                if((this.eraserX >= shape.startX && this.eraserY >= shape.startY) && (this.eraserX <= shape.endX && this.eraserY >= shape.endY)){
+                    eraseFlag = true;
+                    break;
+                }
+            }
+            else if(shape && shape.type === "pencil"){
+                let j = 0;
+                let flag = false;
+                for(;j<shape.lines.length;j++){
+                    let line = shape.lines[j];
+                    if((line.startX === this.eraserX && line.startY === this.eraserY )|| (line.endX === this.eraserX && line.endY === this.eraserY)){
+                        eraseFlag = true;
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag) break;
+            }
         }
-                if(eraseFlag){
+
+        if(eraseFlag){
             this.existingShapes = this.existingShapes.filter(s => s != shape);
             this.clearAndPopulateCanvas();
             this.socket.send(JSON.stringify({
