@@ -1,27 +1,32 @@
 import { getExistingShapes } from "./fetchData";
 import { Tools } from "../components/Canvas";
 
-type Shape = {
+type Rect =  {
     type: "rect", 
     x: number, 
     y: number, 
     width: number, 
     height: number
-} | 
-{
+}
+
+type Cir ={
     type: "circle", 
     centerX: number, 
     centerY: number, 
     radius: number
-    
-} | 
-{
+}
+
+type Li = {
     type: "line",
     startX: number, 
     startY: number, 
     endX: number, 
     endY: number, 
-} | {
+}
+
+type Shape = Rect | 
+Cir | 
+Li | {
     type: "pencil", 
     lines: {
     startX: number, 
@@ -46,12 +51,12 @@ export class Game {
     private roomId: string;
     socket: WebSocket;
     private clickedFlag: boolean;
-    private lines: {
-        startX: number, 
-        startY: number, 
-        endX: number, 
-        endY: number, 
-    }[]  = [];
+    private lines:{
+            startX: number, 
+    startY: number, 
+    endX: number, 
+    endY: number, 
+    }[] = [];
     private lineObj = {x:0 ,y:0};
     private eraserX = 0;
     private eraserY = 0;
@@ -80,6 +85,7 @@ export class Game {
     private isPointNearLine() {
     if(!this.currShape) return;
     if(this.currShape.type !== "line") return;
+    
     const tolerance = 3;
     const x1 = this.currShape.startX;
     const x2 = this.currShape.endX;
@@ -369,16 +375,31 @@ export class Game {
             }
             else if(this.currShape && this.currShape.type === "pencil"){
                 let j = 0;
-                let flag = false;
+                let nearFlag = false;
                 for(;j<this.currShape.lines.length;j++){
-                    let line = this.currShape.lines[j];
-                    if((line.startX === this.eraserX && line.startY === this.eraserY )|| (line.endX === this.eraserX && line.endY === this.eraserY)){
-                        eraseFlag = true;
-                        flag = true;
+                    const x1 = this.currShape.lines[j].startX;
+                    const x2 = this.currShape.lines[j].endX;
+                    const y1 = this.currShape.lines[j].startY;
+                    const y2 = this.currShape.lines[j].endY;
+
+                    const px = this.eraserX;
+                    const py = this.eraserY;
+
+                    const numerator = Math.abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1);
+                    const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
+                    const distance = numerator / denominator;
+                    const withinX = px >= Math.min(x1, x2) - tolerance && px <= Math.max(x1, x2) + tolerance;
+                    const withinY = py >= Math.min(y1, y2) - tolerance && py <= Math.max(y1, y2) + tolerance;
+
+                    if(distance <= tolerance && withinX && withinY){
+                        nearFlag = true;
                         break;
                     }
                 }
-                if(flag) break;
+                if(nearFlag) {
+                    eraseFlag = true;
+                    break;
+                }  
             }
         }
 
@@ -393,6 +414,7 @@ export class Game {
             })
         }));
         this.clearAndPopulateCanvas();
-        }
+    }
+    this.clearAndPopulateCanvas();
 }
 };
