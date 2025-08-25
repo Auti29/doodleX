@@ -38,6 +38,7 @@ type Shape = {
 
 
 export class Game {
+    private currShape: Shape | null = null; 
     private canvas: HTMLCanvasElement;
     private cxt: CanvasRenderingContext2D;
     private chatId = null;
@@ -75,6 +76,30 @@ export class Game {
     }
     return false;
 }
+
+    private isPointNearLine() {
+    if(!this.currShape) return;
+    if(this.currShape.type !== "line") return;
+    const tolerance = 3;
+    const x1 = this.currShape.startX;
+    const x2 = this.currShape.endX;
+    const y1 = this.currShape.startY;
+    const y2 = this.currShape.endY;
+    const px = this.eraserX;
+    const py = this.eraserY;
+
+    // distance from point to line
+    const numerator = Math.abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1);
+    const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
+    const distance = numerator / denominator;
+
+    // check bounding box
+    const withinX = px >= Math.min(x1, x2) - tolerance && px <= Math.max(x1, x2) + tolerance;
+    const withinY = py >= Math.min(y1, y2) - tolerance && py <= Math.max(y1, y2) + tolerance;
+
+    return distance <= tolerance && withinX && withinY;
+}
+
 
 
 
@@ -301,54 +326,52 @@ export class Game {
     eraseShape = () => {
         let eraseFlag = false;
         let i;
-        let shape: Shape;
         const tolerance = 3;
         for(i = 0;i<this.existingShapes.length;i++){
-           shape = this.existingShapes[i];
-            if(shape && shape.type === "rect"){
+           this.currShape = this.existingShapes[i];
+            if(this.currShape && this.currShape.type === "rect"){
                 //top boundary 
-                if((Math.abs(this.eraserY - shape.y) <= tolerance) && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
+                if((Math.abs(this.eraserY - this.currShape.y) <= tolerance) && (this.eraserX >= this.currShape.x && this.eraserX <= this.currShape.x+this.currShape.width)){
                     eraseFlag = true;
                     break;
                 }
                 //bottom boundary 
-                if((Math.abs(this.eraserY - (shape.y+shape.height)) <= tolerance) && (this.eraserX >= shape.x && this.eraserX <= shape.x+shape.width)){
+                if((Math.abs(this.eraserY - (this.currShape.y+this.currShape.height)) <= tolerance) && (this.eraserX >= this.currShape.x && this.eraserX <= this.currShape.x+this.currShape.width)){
                     eraseFlag = true;
                     break;
                 }
                 //left boundary
-                if((Math.abs(this.eraserX - shape.x) <= tolerance) && (this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
+                if((Math.abs(this.eraserX - this.currShape.x) <= tolerance) && (this.eraserY >= this.currShape.y && this.eraserY <= this.currShape.y+this.currShape.height)){
                     eraseFlag = true;
                     break;
                 }
                 //right boundary
-                if((Math.abs(this.eraserX - (shape.x+shape.width)) <= tolerance) &&(this.eraserY >= shape.y && this.eraserY <= shape.y+shape.height)){
+                if((Math.abs(this.eraserX - (this.currShape.x+this.currShape.width)) <= tolerance) &&(this.eraserY >= this.currShape.y && this.eraserY <= this.currShape.y+this.currShape.height)){
                     eraseFlag = true;
                     break;
                 }
             }
-            else if(shape && shape.type === "circle"){
+            else if(this.currShape && this.currShape.type === "circle"){
                 const distance = Math.sqrt(
-                    (this.eraserX - shape.centerX) ** 2 +
-                    (this.eraserY - shape.centerY) ** 2
+                    (this.eraserX - this.currShape.centerX) ** 2 +
+                    (this.eraserY - this.currShape.centerY) ** 2
                 );
-                if(Math.abs(distance-shape.radius) <= tolerance){
+                if(Math.abs(distance-this.currShape.radius) <= tolerance){
                     eraseFlag = true;
                     break;
                 }
 
             }
-            else if(shape && shape.type === "line"){
-                if((this.eraserX >= shape.startX && this.eraserY >= shape.startY) && (this.eraserX <= shape.endX && this.eraserY >= shape.endY)){
+            else if((this.currShape && this.currShape.type === "line") && this.isPointNearLine()){                
                     eraseFlag = true;
                     break;
-                }
+
             }
-            else if(shape && shape.type === "pencil"){
+            else if(this.currShape && this.currShape.type === "pencil"){
                 let j = 0;
                 let flag = false;
-                for(;j<shape.lines.length;j++){
-                    let line = shape.lines[j];
+                for(;j<this.currShape.lines.length;j++){
+                    let line = this.currShape.lines[j];
                     if((line.startX === this.eraserX && line.startY === this.eraserY )|| (line.endX === this.eraserX && line.endY === this.eraserY)){
                         eraseFlag = true;
                         flag = true;
@@ -360,13 +383,13 @@ export class Game {
         }
 
         if(eraseFlag){
-            this.existingShapes = this.existingShapes.filter(s => s != shape);
+            this.existingShapes = this.existingShapes.filter(s => s != this.currShape);
             this.clearAndPopulateCanvas();
             this.socket.send(JSON.stringify({
             type: "deleteChat", 
             roomId: this.roomId, 
             message: JSON.stringify({
-              shape: shape!  
+              shape: this.currShape!  
             })
         }));
         this.clearAndPopulateCanvas();
