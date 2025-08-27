@@ -11,9 +11,13 @@ type Rect =  {
 
 type Cir ={
     type: "circle", 
-    centerX: number, 
-    centerY: number, 
-    radius: number
+    x: number, 
+    y: number, 
+    radiusX: number, 
+    radiusY: number, 
+    rotation: number, 
+    startAngle: number, 
+    endAngle: number
 }
 
 type Li = {
@@ -34,7 +38,7 @@ Li | {
     endX: number, 
     endY: number, 
     }[]
-}
+};
 
 // type ShapeObj = {
 //     id: string, 
@@ -71,7 +75,7 @@ export class Game {
         return a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height;
     }
     if(a.type === "circle" && b.type === "circle"){
-        return a.centerX === b.centerX && a.centerY === b.centerY && a.radius === b.radius;
+        return a.x === b.x && a.y === b.y && a.radiusX === b.radiusX && a.radiusY === b.radiusY && a.startAngle === b.startAngle && a.endAngle === b.endAngle && a.rotation === b.rotation;
     }
     if(a.type === "line" && b.type === "line"){
         return a.startX === b.startX && a.startY === b.startY && a.endX === b.endX && a.endY === b.endY;
@@ -106,6 +110,14 @@ export class Game {
     return distance <= tolerance && withinX && withinY;
 }
 
+
+    private isPointOnEllipseEdge(cx: number, cy: number, rx: number, ry: number, px: number, py: number, tolerance: number) {
+    //normalization
+        const value =
+    ((px - cx) ** 2) / (rx ** 2) +
+    ((py - cy) ** 2) / (ry ** 2);
+  return value >= (1 - tolerance) && value <= (1 + tolerance);
+}
 
 
 
@@ -170,7 +182,7 @@ export class Game {
             }
             else if(shape && shape.type === "circle"){
                 this.cxt.beginPath();
-                this.cxt.arc(shape.centerX, shape.centerY, Math.abs(shape.radius), 0, Math.PI * 2);
+                this.cxt.ellipse(shape.x,  shape.y, shape.radiusX, shape.radiusY, shape.rotation, shape.startAngle, shape.endAngle);
                 this.cxt.stroke();
                 this.cxt.closePath();
             }
@@ -209,7 +221,6 @@ export class Game {
             this.eraserY = e.clientY;
             this.eraseShape();
         }
-
     }
 
 
@@ -230,12 +241,17 @@ export class Game {
             }
         }
         else if(this.selectedTool === "Circle"){
-        const radius = Math.abs(Math.max(width, height) / 2);
+        const radiusX = Math.abs(width / 2);
+        const radiusY = Math.abs(height / 2);
         currShape = {
             type: "circle", 
-            centerX: this.startX + radius, 
-            centerY: this.startY + radius, 
-            radius: radius
+            x: this.startX+radiusX,
+            y:this.startY+radiusY, 
+            radiusX,  
+            radiusY, 
+            rotation: Math.PI, 
+            startAngle: 0, 
+            endAngle: 2*Math.PI, 
         }
         }
         else if(this.selectedTool === "Line"){
@@ -280,11 +296,12 @@ export class Game {
                 this.cxt.strokeRect(this.startX, this.startY, width, height);
             }
             else if(selectedTool == "Circle"){
-                const radius = Math.abs(Math.max(width, height)/2);
-                const centerX = this.startX + radius;
-                const centerY = this.startY + radius;
+                const radiusX = Math.abs(width / 2);
+                const radiusY = Math.abs(height / 2);
+                const x = this.startX + radiusX;
+                const y = this.startY + radiusY;
                 this.cxt.beginPath();
-                this.cxt.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                this.cxt.ellipse(x,  y, radiusX, radiusY, 0, 0, 2 * Math.PI);
                 this.cxt.stroke();
                 this.cxt.closePath();
             }
@@ -320,6 +337,7 @@ export class Game {
             }
     }
     }
+
 
     mouseEventHandlers() {
         this.canvas.addEventListener("mousedown", this.mouseDownHandler);
@@ -358,11 +376,7 @@ export class Game {
                 }
             }
             else if(this.currShape && this.currShape.type === "circle"){
-                const distance = Math.sqrt(
-                    (this.eraserX - this.currShape.centerX) ** 2 +
-                    (this.eraserY - this.currShape.centerY) ** 2
-                );
-                if(Math.abs(distance-this.currShape.radius) <= tolerance){
+                if( this.isPointOnEllipseEdge(this.currShape.x, this.currShape.y, this.currShape.radiusX, this.currShape.radiusY, this.eraserX, this.eraserY, 2)){
                     eraseFlag = true;
                     break;
                 }

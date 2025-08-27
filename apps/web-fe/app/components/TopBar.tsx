@@ -5,7 +5,7 @@ import { Tools } from "./Canvas";
 
 export default function TopBar({selectedTool, setSelectedTool}: {selectedTool: string, setSelectedTool: Dispatch<SetStateAction<Tools>>}) {
     return ( 
-        <div className="cursor-pointer bg-slate-800 borde-0 fixed text-black top-5 flex w-fit gap-1.5 p-1 rounded-lg left-5 text-sm justify-center items-center">
+        <div className="cursor-pointer bg-slate-800 border-0 fixed text-black top-5 flex w-fit gap-1.5 p-1 rounded-lg left-5 text-sm justify-center items-center">
                 <IconBtn 
                 icon={<Minus size={15}/>}
                 activated={selectedTool === "Line"}

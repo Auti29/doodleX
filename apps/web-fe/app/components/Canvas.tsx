@@ -36,13 +36,12 @@ export default function Canvas({roomId, socket} : {
 
     return(
         <>
-        <div className={`overflow-hidden h-[100vh] ${(selectedTool === "Rect" || selectedTool === "Circle"  || selectedTool === "Line" || selectedTool === "Pencil" ) && "cursor-crosshair"}`}>
+        <div className={`overflow-hidden h-[100vh] ${(selectedTool === "Rect" || selectedTool === "Circle"  || selectedTool === "Line" || selectedTool === "Pencil" ) && "cursor-crosshair"} ${selectedTool === "Eraser" && " cursor-[var(--cursor-eraser)]"}`}>
             <canvas ref={canvasRef} />
             <TopBar 
                 selectedTool = {selectedTool}
                 setSelectedTool = {setSelectedTool}
             />
-
         </div>
         </>
     )
