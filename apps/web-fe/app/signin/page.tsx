@@ -17,8 +17,6 @@ export default function Signin() {
             password
         });
 
-        console.log(res.data.token);
-
         if(res.status === 200){
             localStorage.setItem("token", res.data.token);
             alert(res.data.message);

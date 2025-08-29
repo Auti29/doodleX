@@ -15,17 +15,25 @@ interface AuthI {
 export default function AuthPageCard({isSignup, buttonTxt, headingTxt, handleSignupClick, handleSigninClick}: AuthI) {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
 
 
-    function handleSubmit() {
-        if(isSignup && handleSignupClick){
-            //todo: check credentials with zod
-            handleSignupClick(username, email, password); 
-        }
-        else if(handleSigninClick){
-            //todo: check credentials with zod
-            handleSigninClick(username, password);
+    async function handleSubmit() {
+        if(loading) return;
+        try{
+            setLoading(true);
+            if(isSignup && handleSignupClick){
+                //todo: check credentials with zod
+                await handleSignupClick(username, email, password); 
+            }
+            else if(handleSigninClick){
+                //todo: check credentials with zod
+                await handleSigninClick(username, password);
+            }
+
+        }finally{
+            setLoading(false);
         }
     }
 
@@ -39,7 +47,7 @@ export default function AuthPageCard({isSignup, buttonTxt, headingTxt, handleSig
             <input
              onChange={(e) => setEmail(e.target.value)}
              value={email}
-             className="border border-gray-600 p-2 rounded-md m-auto w-full" type="text" placeholder="Enter your email"/>
+             className="border border-gray-600 p-2 rounded-md m-auto w-full" type="text" placeholder="Enter your email" />
             </div>}
 
             <div className="mt-1.5  mb-1.5 w-[80%] flex flex-col justify-center">
@@ -59,8 +67,9 @@ export default function AuthPageCard({isSignup, buttonTxt, headingTxt, handleSig
 
             <div className="mt-2  mb-2.5 w-[80%] flex flex-col justify-center">
             <button
+            disabled = {loading}
             onClick={handleSubmit}
-            className="p-2 border-0 rounded-md bg-gray-600 w-full text-white font-bold cursor-pointer hover:bg-gray-400">{buttonTxt}</button>
+            className={`p-2 border-0 rounded-md bg-gray-600 w-full text-white font-bold cursor-pointer hover:bg-gray-400 ${loading && " bg-gray-300"}`}>{loading ? "Loading..." :buttonTxt}</button>
             </div>
         </div>
     )
