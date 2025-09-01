@@ -57,6 +57,8 @@ export class Game {
     private offsetY = 0;
     private roomId: string;
     socket: WebSocket;
+    private minScale: number;
+    private maxScale: number = 10; 
     private clickedFlag: boolean;
     private lines:{
         startX: number, 
@@ -70,6 +72,29 @@ export class Game {
     private startX = 0;
     private startY = 0;
     private selectedTool: Tools = "Rect";
+    private worldWidth;
+    private worldHeight;
+
+
+
+    constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
+        this.canvas = canvas;
+        this.cxt = canvas.getContext("2d")!;
+        this.existingShapes = [];
+        this.roomId = roomId;
+        this.socket = socket;
+        this.clickedFlag = false;
+        this.init();
+        this.initHandlers();
+        this.mouseEventHandlers();
+          this.worldWidth = canvas.width;
+  this.worldHeight = canvas.height;
+
+        this.minScale = Math.min(
+            canvas.width / canvas.width,  
+            canvas.height / canvas.height 
+        );
+    }
 
     private isSameShape(a: Shape, b: Shape): boolean {
     if(a.type !== b.type) return false;
@@ -116,11 +141,9 @@ export class Game {
 
     private isPointOnEllipseEdge(cx: number, cy: number, rx: number, ry: number, px: number, py: number, tolerance: number) {
     //normalization
-        const value =
-    ((px - cx) ** 2) / (rx ** 2) +
-    ((py - cy) ** 2) / (ry ** 2);
-  return value >= (1 - tolerance) && value <= (1 + tolerance);
-}
+        const value =((px - cx) ** 2) / (rx ** 2) + ((py - cy) ** 2) / (ry ** 2);
+        return value >= (1 - tolerance) && value <= (1 + tolerance);
+    }
 
 
     private screenToWorld(x: number, y:number) {
@@ -130,17 +153,7 @@ export class Game {
         };
 }
 
-    constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
-        this.canvas = canvas;
-        this.cxt = canvas.getContext("2d")!;
-        this.existingShapes = [];
-        this.roomId = roomId;
-        this.socket = socket;
-        this.clickedFlag = false;
-        this.init();
-        this.initHandlers();
-        this.mouseEventHandlers();
-    }
+    
 
 
     destroy() {
@@ -149,6 +162,8 @@ export class Game {
         this.canvas.removeEventListener("mouseup", this.mouseUpHandler);
 
         this.canvas.removeEventListener("mousemove", this.mouseMoveHandler);
+
+        this.canvas.removeEventListener("wheel", this.handleZoom);
     }
 
 
@@ -359,23 +374,35 @@ export class Game {
     }
     }
 
-    handleZoom = (e: WheelEvent) =>  {
-    e.preventDefault();
+ 
 
-    const zoomFactor = 1.1;
-    const mouse = this.screenToWorld(e.offsetX, e.offsetY);
 
-    if (e.deltaY < 0) {
-        this.scale *= zoomFactor;
-    } else {
-        this.scale /= zoomFactor;
-    }
+handleZoom = (e: WheelEvent) => {
+  e.preventDefault();
 
-    this.offsetX = e.offsetX - mouse.x * this.scale;
-    this.offsetY = e.offsetY - mouse.y * this.scale;
+  const zoomFactor = 1.1;
 
-    this.clearAndPopulateCanvas();
-    }
+  const mouseWorld = this.screenToWorld(e.offsetX, e.offsetY);
+
+  if (e.deltaY < 0) {
+    this.scale *= zoomFactor;
+  } else {
+    this.scale /= zoomFactor;
+  }
+
+  this.scale = Math.min(Math.max(this.scale, this.minScale), this.maxScale);
+
+  this.offsetX = e.offsetX - mouseWorld.x * this.scale;
+  this.offsetY = e.offsetY - mouseWorld.y * this.scale;
+
+  const worldWidth = this.worldWidth * this.scale;
+  const worldHeight = this.worldHeight * this.scale;
+
+  this.offsetX = Math.min(0, Math.max(this.offsetX, this.canvas.width - worldWidth));
+  this.offsetY = Math.min(0, Math.max(this.offsetY, this.canvas.height - worldHeight));
+
+  this.clearAndPopulateCanvas();
+};
 
 
     mouseEventHandlers() {
@@ -473,73 +500,3 @@ export class Game {
     this.clearAndPopulateCanvas();
 }
 };
-
-
-
-// <canvas id="myCanvas" width="800" height="600" style="border:1px solid black"></canvas>
-
-// <script>
-// const canvas = document.getElementById("myCanvas");
-// const ctx = canvas.getContext("2d");
-
-// // zoom state
-// let scale = 1.0;
-// let offsetX = 0;
-// let offsetY = 0;
-
-// // store drawn circles (in world coords)
-// let shapes = [];
-
-// // convert screen → world coords
-// function screenToWorld(x, y) {
-//   return {
-//     x: (x - offsetX) / scale,
-//     y: (y - offsetY) / scale
-//   };
-// }
-
-// // render everything
-// function render() {
-    //   ctx.setTransform(1, 0, 0, 1, 0, 0); // reset
-    //   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-//   ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
-
-//   // draw shapes
-//   shapes.forEach(s => {
-//     ctx.beginPath();
-//     ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-//     ctx.fillStyle = "red";
-//     ctx.fill();
-//   });
-// }
-
-// // handle zoom with mouse wheel
-// canvas.addEventListener("wheel", (e) => {
-//   e.preventDefault();
-
-//   const zoomFactor = 1.1;
-//   const mouse = screenToWorld(e.offsetX, e.offsetY);
-
-//   if (e.deltaY < 0) {
-//     scale *= zoomFactor;
-//   } else {
-//     scale /= zoomFactor;
-//   }
-
-//   // keep zoom centered on mouse
-//   offsetX = e.offsetX - mouse.x * scale;
-//   offsetY = e.offsetY - mouse.y * scale;
-
-//   render();
-// });
-
-// // draw on click
-// canvas.addEventListener("click", (e) => {
-//   const worldPos = screenToWorld(e.offsetX, e.offsetY);
-//   shapes.push({ x: worldPos.x, y: worldPos.y, r: 20 }); // fixed radius
-//   render();
-// });
-
-// render();
-// </script>

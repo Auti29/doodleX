@@ -1,9 +1,10 @@
 import { Circle,  EraserIcon, Minus, PencilLineIcon, PenIcon, RectangleHorizontalIcon } from "lucide-react";
 import IconBtn from "./IconBtn";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, RefObject, SetStateAction } from "react";
 import { Tools } from "./Canvas";
+import ZoomComponent from "./ZoomComponent";
 
-export default function TopBar({selectedTool, setSelectedTool}: {selectedTool: string, setSelectedTool: Dispatch<SetStateAction<Tools>>}) {
+export default function TopBar({selectedTool, setSelectedTool, canvasRef}: {selectedTool: string, setSelectedTool: Dispatch<SetStateAction<Tools>>, canvasRef: RefObject<HTMLCanvasElement | null>}) {
     return ( 
         <div className="cursor-pointer bg-slate-800 border-0 fixed text-black top-5 flex w-fit gap-1.5 p-1 rounded-lg left-5 text-sm justify-center items-center">
                 <IconBtn 
@@ -36,6 +37,8 @@ export default function TopBar({selectedTool, setSelectedTool}: {selectedTool: s
                 onClick={() => setSelectedTool("Eraser")}
                 activated = {selectedTool === "Eraser"}
                 />
+
+                <ZoomComponent canvasRef = {canvasRef}/>
             </div>
     )
 }
