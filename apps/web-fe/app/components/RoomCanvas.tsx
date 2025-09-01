@@ -30,7 +30,9 @@ export default function RoomCanvas({roomId}: {roomId: string}) {
 
 
     if(!socket){
-        return <div>connecting to server.....</div>
+        return <div className="w-[100vw] h-[100vh] bg-black flex justify-center items-center text-xl text-white font-bold font-mono cursor-wait">
+            <span>connecting to server.....</span>
+            </div>
     }
 
     return (

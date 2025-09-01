@@ -52,14 +52,17 @@ export class Game {
     private cxt: CanvasRenderingContext2D;
     private chatId = null;
     private existingShapes: Shape[];
+    private  scale = 1.0;
+    private offsetX = 0;
+    private offsetY = 0;
     private roomId: string;
     socket: WebSocket;
     private clickedFlag: boolean;
     private lines:{
-            startX: number, 
-    startY: number, 
-    endX: number, 
-    endY: number, 
+        startX: number, 
+        startY: number, 
+        endX: number, 
+        endY: number, 
     }[] = [];
     private lineObj = {x:0 ,y:0};
     private eraserX = 0;
@@ -120,6 +123,12 @@ export class Game {
 }
 
 
+    private screenToWorld(x: number, y:number) {
+        return {
+            x: (x - this.offsetX) / this.scale,
+            y: (y - this.offsetY) / this.scale
+        };
+}
 
     constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
         this.canvas = canvas;
@@ -170,7 +179,11 @@ export class Game {
     }
 
     clearAndPopulateCanvas(){
-        this.cxt.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+      this.cxt.setTransform(1, 0, 0, 1, 0, 0); // reset
+
+      this.cxt.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.cxt.setTransform(this.scale, 0, 0, this.scale, this.offsetX, this.offsetY);
         this.cxt.fillStyle = "rgba(0, 0, 0)";
         this.cxt.fillRect(0,0,this.canvas.width, this.canvas.height);
         // this.cxt.lineWidth = 5;
@@ -209,9 +222,13 @@ export class Game {
     
 
     mouseDownHandler = (e: MouseEvent) => {
+
+        const worldPos = this.screenToWorld(e.offsetX, e.offsetY);
         this.clickedFlag = true;
-        this.startX = e.clientX;
-        this.startY = e.clientY;
+        this.startX = worldPos.x;
+        this.startY = worldPos.y;
+        // this.startX = e.clientX;
+        // this.startY = e.clientY;
         if(this.selectedTool === "Pencil"){
             this.lineObj.x = e.clientX;
             this.lineObj.y = e.clientY;
@@ -225,11 +242,14 @@ export class Game {
 
 
     mouseUpHandler = (e: MouseEvent) => {
+        const worldPos = this.screenToWorld(e.offsetX, e.offsetY);
         this.clickedFlag = false;
-        const endX = e.clientX;
-        const endY = e.clientY;
-        const width = e.clientX - this.startX;
-        const height = e.clientY - this.startY;
+        // const endX = e.clientX;
+        // const endY = e.clientY;
+        const endX = worldPos.x;
+        const endY = worldPos.y;
+        const width = worldPos.x - this.startX;
+        const height = worldPos.y - this.startY;
         let currShape: Shape | null = null;
         if(this.selectedTool === "Rect"){
             currShape = {
@@ -269,7 +289,7 @@ export class Game {
                 lines: this.lines
             }
         }
-    
+        
         if(!currShape) return;
         this.existingShapes.push(currShape);    
         this.clearAndPopulateCanvas();
@@ -284,10 +304,11 @@ export class Game {
     }
 
     mouseMoveHandler = (e: MouseEvent)  => {
+        const worldPos = this.screenToWorld(e.offsetX, e.offsetY);
         if(this.clickedFlag){
             this.clearAndPopulateCanvas();
-            const width = e.clientX - this.startX;
-            const height = e.clientY - this.startY;
+            const width = worldPos.x - this.startX;
+            const height = worldPos.y - this.startY;
             this.cxt.strokeStyle = "rgba(255, 255, 255)";
             
             // @ts-ignore
@@ -306,8 +327,8 @@ export class Game {
                 this.cxt.closePath();
             }
             else if(selectedTool === "Line"){
-                const endX = e.clientX;
-                const endY = e.clientY;
+                const endX = worldPos.x;
+                const endY = worldPos.y;
                 this.cxt.beginPath();
                 this.cxt.moveTo(this.startX, this.startY);
                 this.cxt.lineTo(endX, endY);
@@ -317,8 +338,8 @@ export class Game {
             else if(selectedTool === "Pencil"){
                 const startX = this.lineObj.x;
                 const startY = this.lineObj.y;
-                const endX = e.clientX;
-                const endY = e.clientY;
+                const endX = worldPos.x;
+                const endY = worldPos.y;
                 this.cxt.beginPath();
                 this.cxt.lineWidth = 1;
                 this.cxt.lineCap = "round";
@@ -338,6 +359,24 @@ export class Game {
     }
     }
 
+    handleZoom = (e: WheelEvent) =>  {
+    e.preventDefault();
+
+    const zoomFactor = 1.1;
+    const mouse = this.screenToWorld(e.offsetX, e.offsetY);
+
+    if (e.deltaY < 0) {
+        this.scale *= zoomFactor;
+    } else {
+        this.scale /= zoomFactor;
+    }
+
+    this.offsetX = e.offsetX - mouse.x * this.scale;
+    this.offsetY = e.offsetY - mouse.y * this.scale;
+
+    this.clearAndPopulateCanvas();
+    }
+
 
     mouseEventHandlers() {
         this.canvas.addEventListener("mousedown", this.mouseDownHandler);
@@ -345,6 +384,8 @@ export class Game {
         this.canvas.addEventListener("mouseup", this.mouseUpHandler);
 
         this.canvas.addEventListener("mousemove", this.mouseMoveHandler);
+
+        this.canvas.addEventListener("wheel", this.handleZoom);
     }
 
     eraseShape = () => {
@@ -432,3 +473,73 @@ export class Game {
     this.clearAndPopulateCanvas();
 }
 };
+
+
+
+// <canvas id="myCanvas" width="800" height="600" style="border:1px solid black"></canvas>
+
+// <script>
+// const canvas = document.getElementById("myCanvas");
+// const ctx = canvas.getContext("2d");
+
+// // zoom state
+// let scale = 1.0;
+// let offsetX = 0;
+// let offsetY = 0;
+
+// // store drawn circles (in world coords)
+// let shapes = [];
+
+// // convert screen → world coords
+// function screenToWorld(x, y) {
+//   return {
+//     x: (x - offsetX) / scale,
+//     y: (y - offsetY) / scale
+//   };
+// }
+
+// // render everything
+// function render() {
+    //   ctx.setTransform(1, 0, 0, 1, 0, 0); // reset
+    //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+//   ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
+
+//   // draw shapes
+//   shapes.forEach(s => {
+//     ctx.beginPath();
+//     ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+//     ctx.fillStyle = "red";
+//     ctx.fill();
+//   });
+// }
+
+// // handle zoom with mouse wheel
+// canvas.addEventListener("wheel", (e) => {
+//   e.preventDefault();
+
+//   const zoomFactor = 1.1;
+//   const mouse = screenToWorld(e.offsetX, e.offsetY);
+
+//   if (e.deltaY < 0) {
+//     scale *= zoomFactor;
+//   } else {
+//     scale /= zoomFactor;
+//   }
+
+//   // keep zoom centered on mouse
+//   offsetX = e.offsetX - mouse.x * scale;
+//   offsetY = e.offsetY - mouse.y * scale;
+
+//   render();
+// });
+
+// // draw on click
+// canvas.addEventListener("click", (e) => {
+//   const worldPos = screenToWorld(e.offsetX, e.offsetY);
+//   shapes.push({ x: worldPos.x, y: worldPos.y, r: 20 }); // fixed radius
+//   render();
+// });
+
+// render();
+// </script>
