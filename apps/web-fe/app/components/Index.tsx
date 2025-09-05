@@ -11,7 +11,8 @@ import {
   Lock,
   Timer,
   UserCircle2,
-  Users2
+  Users2,
+  ArrowBigRightDash
 } from 'lucide-react';
 import Logo from './Logo';
 import Link from 'next/link';
@@ -107,14 +108,14 @@ function Index() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Everything you need to create</h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
               Powerful tools designed for seamless collaboration and unlimited creativity
             </p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
-              <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="bg-slate-900 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
+              <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mb-6 group-hover:bg-white group-hover:scale-110 transition-transform">
                 <Users className="h-6 w-6 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-4">Real-time Collaboration</h3>
@@ -123,8 +124,8 @@ function Index() {
               </p>
             </div>
             
-            <div className="bg-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
-              <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="bg-slate-900 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
+              <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mb-6 group-hover:bg-white group-hover:scale-110 transition-transform">
                 <Share2 className="h-6 w-6 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-4">Instant Sharing</h3>
@@ -133,8 +134,8 @@ function Index() {
               </p>
             </div>
             
-            <div className="bg-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
-              <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="bg-slate-900 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
+              <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mb-6 group-hover:bg-white group-hover:scale-110 transition-transform">
                 <Zap className="h-6 w-6 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-4">Lightning Fast</h3>
@@ -143,8 +144,8 @@ function Index() {
               </p>
             </div>
             
-            <div className="bg-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
-              <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="bg-slate-900 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
+              <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mb-6 group-hover:bg-white group-hover:scale-110 transition-transform">
                 <Globe className="h-6 w-6 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-4">Access Anywhere</h3>
@@ -153,8 +154,8 @@ function Index() {
               </p>
             </div>
             
-            <div className="bg-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
-              <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="bg-slate-900 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
+              <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mb-6 group-hover:bg-white group-hover:scale-110 transition-transform">
                 <Lock className="h-6 w-6 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-4">Privacy First</h3>
@@ -163,8 +164,8 @@ function Index() {
               </p>
             </div>
             
-            <div className="bg-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
-              <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="bg-slate-900 p-8 rounded-2xl border border-gray-700 hover:border-gray-500 transition-colors group">
+              <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mb-6 group-hover:bg-white group-hover:scale-110 transition-transform">
                 <Timer className="h-6 w-6 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-4">Version History</h3>
@@ -176,7 +177,6 @@ function Index() {
         </div>
       </section>
 
-      {/* How it Works Section */}
       <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -196,7 +196,6 @@ function Index() {
                 Start with a blank canvas or choose from our templates. No setup required.
               </p>
             </div>
-            
             <div className="text-center">
               <div className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center text-2xl font-bold mb-6 mx-auto">
                 2
@@ -220,7 +219,6 @@ function Index() {
         </div>
       </section>
 
-      {/* Benefits Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900/30">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -288,7 +286,6 @@ function Index() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to start creating?</h2>
@@ -305,7 +302,6 @@ function Index() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">

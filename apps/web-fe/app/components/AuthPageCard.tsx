@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react"
 
 
@@ -70,6 +71,12 @@ export default function AuthPageCard({isSignup, buttonTxt, headingTxt, handleSig
             disabled = {loading}
             onClick={handleSubmit}
             className={`p-2 border-0 rounded-md bg-gray-600 w-full text-white font-bold cursor-pointer hover:bg-gray-400 ${loading && " bg-gray-300"}`}>{loading ? "Loading..." :buttonTxt}</button>
+            </div>
+            <div className="flex justify-center items-center text-sm">
+                <p className="text-gray-600">{isSignup ? "Already have an account?" : "Don't have an account?"} </p>
+                <Link className="font-bold" href={isSignup ? '/signin' : "/signup"}>
+                    <span className="underline">{isSignup ? "Login" : "Signup"}</span>
+                </Link>
             </div>
         </div>
     )
