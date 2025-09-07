@@ -39,42 +39,43 @@ export default function AuthPageCard({isSignup, buttonTxt, headingTxt, handleSig
     }
 
     return (
-         <div className="p-4 m-2 bg-white border-3 border-gray-200 flex flex-col items-center justify-center text-black w-[22vw] rounded-md shadow-lg">
-            <h1 className="font-bold text-2xl text-gray-600 m-2">{headingTxt}</h1>
+         <div className="p-3 ml-10 border-gray-200 flex flex-col text-white rounded-md shadow-lg w-full">
+            <h1 className="font-bold text-4xl text-gray-300 mb-3 underline decoration-blue-600">{headingTxt}</h1>
 
             {isSignup && 
-            <div className="mt-1.5  mb-1.5 w-[80%] flex flex-col justify-center">
-            <h4 className="font-bold">Email</h4>
+            <div className="mt-2.5  mb-1.5 w-[80%] flex flex-col justify-center">
+            <h4 className="mb-1">Email</h4>
             <input
              onChange={(e) => setEmail(e.target.value)}
              value={email}
-             className="border border-gray-600 p-2 rounded-md m-auto w-full" type="text" placeholder="Enter your email" />
+             className="border border-gray-300 rounded-xl  p-2 m-auto w-full" type="text" placeholder="your@email.com" />
             </div>}
 
-            <div className="mt-1.5  mb-1.5 w-[80%] flex flex-col justify-center">
-            <h4 className="font-bold">Username</h4>
+            <div className="mt-2.5  mb-1.5 w-[80%] flex flex-col justify-center">
+            <h4 className="m-1">Username</h4>
             <input 
             onChange={(e) => setUsername(e.target.value)}
             value={username}
-            className="border border-gray-600 p-2 rounded-md m-auto w-full" type="text" placeholder={isSignup? "Create your username":"Enter your username"}/>
+            className="border rounded-xl  border-gray-300 p-2 m-auto w-full" type="text" placeholder={isSignup? "JohnDoe":"Enter your username"}/>
             </div>
-            <div className="mt-1.5  mb-1.5 w-[80%] flex flex-col justify-center">
-            <h4 className="font-bold">Password</h4>
+            <div className="mt-2.5  mb-1.5 w-[80%] flex flex-col justify-center">
+            <h4 className="m-1">Password</h4>
             <input
             onChange={(e) => setPassword(e.target.value)}
             value={password} 
-            className="border border-gray-600 p-2 rounded-md m-auto w-full" type="password" placeholder={isSignup? "Create your password":"Enter your password"}/>
+            className="border rounded-xl  border-gray-300 p-2 m-auto w-full" type="password" placeholder={isSignup? "Your Password":"Enter your password"}/>
             </div>
 
-            <div className="mt-2  mb-2.5 w-[80%] flex flex-col justify-center">
+            <div className="mt-5  mb-2.5 w-[80%] flex flex-col justify-center">
             <button
             disabled = {loading}
             onClick={handleSubmit}
-            className={`p-2 border-0 rounded-md bg-gray-600 w-full text-white font-bold cursor-pointer hover:bg-gray-400 ${loading && " bg-gray-300"}`}>{loading ? "Loading..." :buttonTxt}</button>
+            className={`p-2 border-0 rounded-md bg-white w-full text-black text-sm font-semibold cursor-pointer hover:bg-gray-400 ${loading && " bg-gray-300"}`}>{loading ? "Loading..." :buttonTxt}</button>
             </div>
-            <div className="flex justify-center items-center text-sm">
-                <p className="text-gray-600">{isSignup ? "Already have an account?" : "Don't have an account?"} </p>
-                <Link className="font-bold" href={isSignup ? '/signin' : "/signup"}>
+
+            <div className="flex justify-center items-center text-sm w-[80%]">
+                <p className="text-gray-300">{isSignup ? "Already have an account?" : "Don't have an account?"} </p>
+                <Link className="font-bold ml-1" href={isSignup ? '/signin' : "/signup"}>
                     <span className="underline">{isSignup ? "Login" : "Signup"}</span>
                 </Link>
             </div>

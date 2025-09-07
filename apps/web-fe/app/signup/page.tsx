@@ -1,8 +1,10 @@
-"use client";
-import axios from "axios"
-import AuthPageCard from "../../app/components/AuthPageCard"
+"use client"
+import axios from "axios";
+import AuthPageCard from "../../app/components/AuthPageCard";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import Image from "next/image";
+
+
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
 
 
@@ -34,13 +36,26 @@ export default function Signup() {
     }
     } 
     return (
-       <div className="h-screen w-screen flex justify-center items-center">
+       <div className="h-screen w-screen bg-black overflow-hidden flex justify-center items-center">
+            <div className="w-fit h-fit flex justify-center items-center">
+              <Image 
+                    className="border border-gray-500 rounded-xl"
+                    src={"/doodleXLogo.png"} 
+                    height={600}
+                    width={400}
+                    alt="doodleXlogo"
+                    priority 
+      />
+
+            </div>
+            <div className="w-[45%] ml-2 flex justify-center items-center">
             <AuthPageCard 
             isSignup={true}
             buttonTxt="Signup"
             headingTxt="Register"
             handleSignupClick={handleSignupSubmit}
             />
+            </div>
        </div>
     )
 }
