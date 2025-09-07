@@ -48,7 +48,7 @@ export default function Signup() {
       />
 
             </div>
-            <div className="w-[45%] ml-2 flex justify-center items-center">
+            <div className="w-[45%] flex justify-center items-center ml-10">
             <AuthPageCard 
             isSignup={true}
             buttonTxt="Signup"
