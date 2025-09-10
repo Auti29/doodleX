@@ -3,15 +3,23 @@ import Logo from "./Logo";
 
 export default function NavBar ({username, noToken}: {username:string, noToken: boolean}) {
     return (
-        <div className=" w-[95%] p-3 border-b-4 border-gray-300 flex justify-between m-2 items-center rounded-lg shadow-lg">
+        <div className="pl-8 pr-8 bg-[#222222] flex justify-between items-center border-b border-gray-500 h-[9%] text-sm ">
+            <div className="flex items-center justify-center">
             <Logo />
-            <div className="flex pl-1 pr-1 justify-center items-center">
-            {!noToken && <span className="font-bold mr-2">{username}</span>}
-            <div className="flex items-center justify-center border-2 border-gray-600 rounded-full p-2 bg-gray-200">
-            <UserRoundIcon />
+            <span className="text-3xl text-gray-500 ml-2 mr-2">/</span>
+            {!noToken && <span className="text-center font-bold text-gray-400 mt-1">{username}</span>}
             </div>
+            <div className="flex items-center justify-center">
+
+            <div className="flex border border-gray-500 text-xs rounded-2xl pl-2 pr-2 pt-0.5 pb-0.5 font-bold justify-center items-center h-fit w-fit">
+                <span className="h-2 w-2 border-0 rounded-full bg-green-400 mr-1"></span>
+                <span className="text-xs text-gray-300">All OK</span>
             </div>
-            
+            <div className="flex items-center justify-center border-2 border-gray-600 rounded-md p-2 bg-gray-200 ml-2">
+            <UserRoundIcon className="text-black"/>
+            </div> 
+
+            </div>           
         </div>
     )
 }

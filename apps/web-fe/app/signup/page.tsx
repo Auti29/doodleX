@@ -1,5 +1,5 @@
 "use client"
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import AuthPageCard from "../../app/components/AuthPageCard";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -19,20 +19,30 @@ export default function Signup() {
         email, 
         username, 
         password
+        }, {
+                headers: {
+                'content-Type':'application/json'
+            }
         });
+
 
         if(res.status == 200){
             alert(res.data.message);
-            router.push('/signin');
+            router.push('/signin');     
         }
-        else{
+        else {
             alert(res.data.message);
         }
         
         
-    }catch(e){
-        console.error(e);
+    }catch(e: any){
+        if(e.response.status === 411){
+            alert(e.response.data.message);
+        }
+        else  {
+            console.error(e);
         alert(e);
+        }
     }
     } 
     return (
