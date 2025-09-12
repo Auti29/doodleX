@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CreateRoomComponent from "../components/CreateRoomComponent";
 import NavBar from "../components/Navbar";
-import Sidebar from "../components/SideBar";
+import Sidebar from "../components/MainRooms";
 import axios from "axios";
 import Link from "next/link";
 import MainSideBar from "../components/MainSideBar";
@@ -61,7 +61,7 @@ export default function Dashboard() {
             <MainSideBar />
             <div className="bg-[#191919] w-[80%] flex">
                 <Sidebar user={user} />
-                 <CreateRoomComponent />
+                 {/* <CreateRoomComponent /> */}
             </div>
         </div>
         </div>
