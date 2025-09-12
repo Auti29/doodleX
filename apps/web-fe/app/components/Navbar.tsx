@@ -7,7 +7,7 @@ export default function NavBar ({username, noToken}: {username:string, noToken: 
             <div className="flex items-center justify-center">
             <Logo />
             <span className="text-3xl text-gray-500 ml-2 mr-2">/</span>
-            {!noToken && <span className="text-center font-bold text-gray-400 mt-1">{username}</span>}
+            {!noToken && <span className="text-center font-bold text-gray-400 mt-1">Hello, {username}</span>}
             </div>
             <div className="flex items-center justify-center">
 

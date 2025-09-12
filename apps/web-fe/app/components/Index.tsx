@@ -28,15 +28,16 @@ function Index() {
               <Logo />
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link target="_blank" href={'https://github.com/Auti29/doodleX'}>
-              <button className='border-2 border-gray-400 rounded-full p-2 cursor-pointer hover:bg-gray-800' 
-              ><GithubIcon /></button></Link>
               <a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a>
               <a href="#how-it-works" className="text-gray-300 hover:text-white transition-colors">How it works</a>
               <Link href={'/signup'}>
-              <button className="bg-white text-black px-6 py-2 rounded-xl hover:bg-gray-200 transition-all transform hover:scale-105 font-medium">
+              <button className="bg-white text-black px-4 py-1 text-sm rounded-lg text-center hover:bg-gray-200 transition-all transform hover:scale-105 font-medium">
                 Get Started
               </button>
+              </Link>
+              <Link target="_blank" href={'https://github.com/Auti29/doodleX'}>
+              <button className='border-2 border-gray-400 rounded-lg pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer bg-black hover:bg-gray-800 flex text-xs justify-center items-center' 
+              ><GithubIcon size={23} className='bg-black text-white p-1'/><span className='font-mono'>Github</span></button>
               </Link>
             </div>
           </div>
@@ -294,7 +295,7 @@ function Index() {
             Join thousands of teams already using doodleX to bring their ideas to life
           </p>
           <Link href={'/signup'}>
-          <button className="bg-white text-black px-12 py-4 rounded-lg text-xl font-semibold hover:bg-gray-200 transition-all transform hover:scale-105 inline-flex items-center">
+          <button className="bg-white text-black px-12 py-4 rounded-lg text-xl font-semibold hover:bg-gray-200 transition-all transform hover:scale-105 inline-flex items-center cursor-pointer">
             Create Your First Space
             <ArrowRight className="ml-3 h-6 w-6" />
           </button>
