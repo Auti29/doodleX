@@ -27,7 +27,7 @@ app.post("/api/v1/createRoom", authMiddleware, async (req, res) => {
          
          const roomExists  = await prismaClient.room.findFirst({
              where: {
-                 slug: parsedData.data?.room
+                 slug: parsedData.data?.room, 
              }
          })
      
@@ -40,13 +40,14 @@ app.post("/api/v1/createRoom", authMiddleware, async (req, res) => {
          const room = await prismaClient.room.create({
              data: {
                  slug: parsedData.data!.room, 
-                 adminId: userId
+                 adminId: userId, 
+                 description: parsedData.data?.description
              }
          });
      
          return res.status(200).json({
              message: "room created successfully!!", 
-             roomId: room.id
+             roomId: room.id, 
          });
     }catch(e){
         console.log("error occured: ", e);
@@ -94,7 +95,6 @@ app.get('/api/v1/room/slug', authMiddleware,  async (req, res) => {
   return res.status(200).json({
     message: "success", 
     room
-    
   });
 } catch(e){
     console.log("error occurred: ", e);

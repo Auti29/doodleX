@@ -18,12 +18,13 @@ model User {
 }
 
 model Room {
-  id        Int      @id @default(autoincrement())
-  slug      String   @unique
-  createdAt DateTime @default(now())
-  adminId   String
-  chats     Chat[]
-  admin     User     @relation(fields: [adminId], references: [id])
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  adminId     String
+  chats       Chat[]
+  admin       User     @relation(fields: [adminId], references: [id])
 }
 
 model Chat {

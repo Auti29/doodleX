@@ -14,5 +14,6 @@ export const SigninSchema = z.object({
 
 export const RoomSchema =  z.object({
     room: z.string().min(2), 
+    description: z.string().min(2).max(100).optional(),
 
 });

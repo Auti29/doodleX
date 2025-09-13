@@ -3,12 +3,13 @@
 import axios from "axios";
 import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
 
-export default function CreateRoomComponent() {
-    const [createClicked, setCreateClicked] = useState<boolean>(false);
+export default function CreateRoomComponent({setActiveCreateRoom}: {setActiveCreateRoom: Dispatch<SetStateAction<boolean>>}) {  
+    // const [createClicked, setCreateClicked] = useState<boolean>(false);
     const [roomName, setRoomName] = useState<string>("");
+    const [ roomDecription, setRoomDecription] = useState<string>("");
     const [error, setError]  = useState<boolean>(false);
     const router = useRouter();
 
@@ -17,11 +18,13 @@ export default function CreateRoomComponent() {
             setError(true);
             return;
         }
-    
+        
         const token = localStorage.getItem('token');
 
         const res = await axios.post(`${BACKEND_API}/api/v1/createRoom`,  {
-            room: roomName}
+            room: roomName, 
+            description: roomDecription
+        }
         ,   
         {headers: {
         Authorization:`Bearer ${token}`
@@ -31,39 +34,44 @@ export default function CreateRoomComponent() {
 
       alert(data.message);
 
+      setActiveCreateRoom(false);
+
       router.push(`/canvas/${data.roomId}`);
     }
 
     return (
-        <div className="border-3 border-gray-200 m-2 w-[48%] p-2 rounded-lg shadow-lg h-fit">
-            <h1 className="font-bold text-lg text-gray-500 mb-5 ml-1.5">Create Space</h1>
-            <div className="w-full flex items-center justify-center">
-                <div className="w-[85%] flex justify-center items-center bg-gray-200 border-0 rounded-lg p-5 mb-3">
-                    {   createClicked ? 
-                        <div className="flex flex-col w-full">
-                        <div className="flex h-fit w-full">
+        <div className="m-2 w-80 h-fit rounded-lg shadow-lg bg-[#121212] opacity-100 py-2 px-5">
+            <div className="flex flex-col w-full">
+                <div className="text-xl text-gray-300 mb-5 ml-1.5 font-bold" > 
+                    Create New Space
+                </div>
+                        <div className="flex flex-col h-fit w-full">
                             <input 
                             onChange={(e) => {
                                 setRoomName(e.target.value);
                                 setError(false);
                             }}
                             value={roomName}
-                            className={`flex-3/4 w-full mr-1 p-2 font-bold border-2 ${error ?"border-red-500" :"border-gray-500"} rounded-lg`}
-                             placeholder="Enter custom space name"></input>
+                            className={`w-full mr-1 p-2 font-bold border-2 ${error ?"border-red-500" :"border-gray-500"} rounded-lg`}
+                             placeholder="Enter room name">
+                             </input>
+                            
+                             {error && <div className="ml-1 text-red-500 text-sm font-bold">room name must have atleast 5 characters</div>}
+
+                            <textarea 
+                            className={`mt-3 mb-2 w-full min-h-30 max-h-40 mr-1 p-2 font-bold border-2  rounded-lg`}
+                            placeholder="Enter room description"
+                            onChange={(e) => {
+                                setRoomDecription(e.target.value);
+                            }}
+                            value={roomDecription}
+                            >
+                            </textarea>
                             <button 
                             onClick={handleAddSpace}
-                            className="flex-1/4 bg-blue-600 pt-1 pb-1 pl-4 pr-4 font-bold text-white cursor-pointer hover:bg-blue-200 hover:text-black rounded-lg">
-                            Add Space</button>
+                            className="w-full py-3 px-2 bg-blue-600 text-sm text-center text-white font-bold cursor-pointer hover:bg-blue-200 hover:text-black rounded-lg">Add Space</button>
                         </div>
-                        {error && <div className="ml-1 text-red-500 text-sm font-bold">room name must have atleast 5 characters</div>}
-                        </div>
-                        :
-                        <button 
-                        onClick={() => setCreateClicked(true)}
-                        className="bg-blue-600 pt-2 pb-2 pl-4 pr-4 font-bold text-white cursor-pointer hover:bg-blue-200 hover:text-black rounded-lg">
-                       <span className="flex pl-2 pr-2"><p className="mr-2"> New Collaborative Space</p> <PlusCircleIcon /> </span></button>
-                    }
-                </div>
+                       
             </div>
         </div>
     )

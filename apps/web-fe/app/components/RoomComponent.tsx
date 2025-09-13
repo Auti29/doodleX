@@ -3,7 +3,7 @@
 import { UsersIcon } from "lucide-react";
 import Link from "next/link";
 
-export default function RoomComponent({slug, roomId}: {slug: string, roomId:number}) {
+export default function RoomComponent({slug, roomId, description}: {slug: string, roomId:number, description?: string}) {
     return (
         <div className="bg-[#161616] border-1 border-gray-500 p-4 flex flex-col flex-wrap justify-center rounded-lg m-2 w-[30%]">
             <div className="flex items-center">
@@ -22,7 +22,13 @@ export default function RoomComponent({slug, roomId}: {slug: string, roomId:numb
             </span>
             </div>
             <div className="text-gray-300 text-sm my-2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae eius expedita eveniet quaerat non sint temporibus est culpa illo impedit.
+                {
+                    description 
+                    ?
+                    <p className="text-gray-300">{description}</p>
+                    :
+                    <p className="text-gray-300">real time collaborative drawing board</p>
+                }
             </div>
             <Link href={`/canvas/${roomId}`}>
             <button className="bg-blue-600 text-white font-bold border-0 rounded-md pt-1 pb-1 pl-6 pr-6 cursor-pointer hover:bg-blue-200 hover:text-black">View Space</button>

@@ -3,15 +3,15 @@
 import { useEffect, useState } from "react";
 import CreateRoomComponent from "../components/CreateRoomComponent";
 import NavBar from "../components/Navbar";
-import Sidebar from "../components/MainRooms";
+import MainRooms from "../components/MainRooms";
 import axios from "axios";
-import Link from "next/link";
 import MainSideBar from "../components/MainSideBar";
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
 
 export interface Room {
     id: number, 
     slug: string, 
+    description?: string,
     adminId: string, 
     createdAt: Date
 }
@@ -30,6 +30,7 @@ export default function Dashboard() {
         rooms: []
     });
     const[noToken, setNoToken] = useState<boolean>(false);
+    const [activeCreateRoom, setActiveCreateRoom] = useState<boolean>(false)
 
     
     
@@ -60,8 +61,17 @@ export default function Dashboard() {
             <div className="flex h-[91%]">
             <MainSideBar />
             <div className="bg-[#191919] w-[80%] flex">
-                <Sidebar user={user} />
-                 {/* <CreateRoomComponent /> */}
+                {
+                    activeCreateRoom &&
+                    <>
+                    <div className="fixed w-full h-full bg-gray-300 opacity-50">
+                    </div> 
+                    <div className="z-50 fixed top-[30%] left-[50%]">
+                    <CreateRoomComponent setActiveCreateRoom={setActiveCreateRoom}/>
+                    </div>
+                    </>
+                }
+                <MainRooms user={user} setActiveCreateRoom={setActiveCreateRoom}/>
             </div>
         </div>
         </div>
