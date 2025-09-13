@@ -12,7 +12,7 @@ export default function MainSideBar(){
                 </div>
             </div>
              <div className="w-[95%] text-sm font-bold mb-5">
-                    <button className="border border-gray-500 w-full p-2 flex justify-center items-center rounded-lg text-gray-300 hover:bg-[#121211] hover:text-white"><MessageCircleMoreIcon className="mr-3"/>Feedback</button>
+                    <button className="cursor-pointer border border-gray-500 w-full p-2 flex justify-center items-center rounded-lg text-gray-300 hover:bg-[#121211] hover:text-white"><MessageCircleMoreIcon className="mr-3"/>Feedback</button>
                 </div>
         </div>
     )

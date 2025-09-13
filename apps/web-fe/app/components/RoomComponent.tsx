@@ -1,6 +1,5 @@
 "use client"
 
-import { UsersIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function RoomComponent({slug, roomId, description}: {slug: string, roomId:number, description?: string}) {
@@ -25,9 +24,9 @@ export default function RoomComponent({slug, roomId, description}: {slug: string
                 {
                     description 
                     ?
-                    <p className="text-gray-300">{description}</p>
+                    <p className="mt-2 mb-1 text-sm text-gray-300">{description}</p>
                     :
-                    <p className="text-gray-300">real time collaborative drawing board</p>
+                    <p className="text-sm text-gray-500 italic">No description</p>
                 }
             </div>
             <Link href={`/canvas/${roomId}`}>

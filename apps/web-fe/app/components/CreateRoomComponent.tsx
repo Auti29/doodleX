@@ -1,7 +1,6 @@
 "use client"
 
 import axios from "axios";
-import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
@@ -41,7 +40,7 @@ export default function CreateRoomComponent({setActiveCreateRoom}: {setActiveCre
 
     return (
         <div className="m-2 w-80 h-fit rounded-lg shadow-lg bg-[#121212] opacity-100 py-2 px-5">
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full items-center">
                 <div className="text-xl text-gray-300 mb-5 ml-1.5 font-bold" > 
                     Create New Space
                 </div>
@@ -59,8 +58,8 @@ export default function CreateRoomComponent({setActiveCreateRoom}: {setActiveCre
                              {error && <div className="ml-1 text-red-500 text-sm font-bold">room name must have atleast 5 characters</div>}
 
                             <textarea 
-                            className={`mt-3 mb-2 w-full min-h-30 max-h-40 mr-1 p-2 font-bold border-2  rounded-lg`}
-                            placeholder="Enter room description"
+                            className={`mt-3 mb-2 w-full min-h-30 max-h-40 mr-1 p-2 font-bold border-2 border-gray-500 rounded-lg`}
+                            placeholder="Enter room description(optional)"
                             onChange={(e) => {
                                 setRoomDecription(e.target.value);
                             }}
@@ -69,7 +68,7 @@ export default function CreateRoomComponent({setActiveCreateRoom}: {setActiveCre
                             </textarea>
                             <button 
                             onClick={handleAddSpace}
-                            className="w-full py-3 px-2 bg-blue-600 text-sm text-center text-white font-bold cursor-pointer hover:bg-blue-200 hover:text-black rounded-lg">Add Space</button>
+                            className="w-full py-3 px-2 bg-blue-600 text-sm text-center text-white font-bold cursor-pointer hover:bg-blue-200 hover:text-black rounded-lg mt-1 mb-3">Add Space</button>
                         </div>
                        
             </div>

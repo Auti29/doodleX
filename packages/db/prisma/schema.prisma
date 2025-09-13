@@ -29,7 +29,7 @@ model Room {
 
 model Chat {
   id      String @id @default(uuid())
-  message String //for excalidraw message schema: "{type: "rect", x:21, y:78, width: 50, height: 70}" 
+  message String //message schema: "{type: "rect", x:21, y:78, width: 50, height: 70}" 
   userId  String
   roomId  Int
   user    User   @relation(fields: [userId], references: [id])

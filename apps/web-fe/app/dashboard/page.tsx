@@ -64,7 +64,9 @@ export default function Dashboard() {
                 {
                     activeCreateRoom &&
                     <>
-                    <div className="fixed w-full h-full bg-gray-300 opacity-50">
+                    <div 
+                    onClick={() => setActiveCreateRoom(false)}
+                    className="fixed w-full h-full bg-gray-300 opacity-50">
                     </div> 
                     <div className="z-50 fixed top-[30%] left-[50%]">
                     <CreateRoomComponent setActiveCreateRoom={setActiveCreateRoom}/>
