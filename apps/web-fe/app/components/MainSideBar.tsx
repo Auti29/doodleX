@@ -1,6 +1,8 @@
 import { DiameterIcon, LogOut, MessageCircleMoreIcon, ReceiptPoundSterlingIcon, Users2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function MainSideBar(){
+    const router = useRouter();
     return (
         <div className="w-[20%] bg-[#222222] h-full border-r border-gray-500 flex flex-col justify-between items-center">
             <div className="ml-8 mt-5 w-[90%]">
@@ -12,7 +14,9 @@ export default function MainSideBar(){
                 </div>
             </div>
              <div className="w-[95%] text-sm font-bold mb-5">
-                    <button className="cursor-pointer border border-gray-500 w-full p-2 flex justify-center items-center rounded-lg text-gray-300 hover:bg-[#121211] hover:text-white"><MessageCircleMoreIcon className="mr-3"/>Feedback</button>
+                    <button
+                    onClick={() => router.push('../dashboard/feedback')} 
+                    className="cursor-pointer border border-gray-500 w-full p-2 flex justify-center items-center rounded-lg text-gray-300 hover:bg-[#121211] hover:text-white"><MessageCircleMoreIcon className="mr-3"/>Feedback</button>
                 </div>
         </div>
     )

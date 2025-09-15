@@ -13,9 +13,10 @@ export default function MainRooms ({user, setActiveCreateRoom}: {user: {
 }, setActiveCreateRoom: Dispatch<SetStateAction<boolean>>}) {
 
     return (
-        <div className="m-2 w-full p-2 pl-3 pr-3">
+        <div className="m-2 w-full pt-4 pb-4 pl-5 pr-5">
             <div className="flex justify-between items-center">
                 <h2 className="font-bold text-2xl text-gray-400 ml-1.5 text-center">Existing Spaces</h2>
+
                 <button 
                 onClick={() => setActiveCreateRoom(true)}
                 className=" bg-blue-600 text-white font-bold border-0 rounded-md pt-1 pb-1 pl-6 pr-6 cursor-pointer hover:bg-blue-200 hover:text-black "><span className="flex justify-center items-center"><PlusCircleIcon size={22} className="mr-2" /><span>Create new space</span></span></button>

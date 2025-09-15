@@ -24,7 +24,7 @@ export default function RoomComponent({slug, roomId, description}: {slug: string
                 {
                     description 
                     ?
-                    <p className="mt-2 mb-1 text-sm text-gray-300">{description}</p>
+                    <p className="mt-2 mb-1 text-sm text-gray-400">{description}</p>
                     :
                     <p className="text-sm text-gray-500 italic">No description</p>
                 }
