@@ -17,7 +17,7 @@ export default function RoomComponent({slug, roomId, description}: {slug: string
                     className="relative inline-flex h-3 w-3 m-auto rounded-full bg-green-500"
                     ></span>
             </span>
-                <span className="font-bold font-mono">5 Active users</span>
+                <span className="font-bold font-mono">1 Active users</span>
             </span>
             </div>
             <div className="text-gray-300 text-sm my-2">
