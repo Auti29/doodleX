@@ -1,13 +1,19 @@
 import { UserRoundIcon } from "lucide-react";
 import Logo from "./Logo";
+import { LayoutContext } from "../dashboard/layout";
+import { useContext } from "react";
 
-export default function NavBar ({username, noToken}: {username:string, noToken: boolean}) {
+export default function NavBar () {
+    const {user, noToken} = useContext(LayoutContext);
     return (
-        <div className="pl-8 pr-8 pt-2 pb-2 bg-[#222222] flex justify-between items-center border-b border-gray-500 h-[9%] text-sm">
+        
+        <div className="pl-8 pr-8 pt-2 pb-2 bg-[#222222] flex justify-between 
+                        items-center border-b border-gray-500 h-[60px] w-full">
+
             <div className="flex items-center justify-center">
             <Logo />
             <span className="text-3xl text-gray-500 ml-2 mr-2">/</span>
-            {!noToken && <span className="text-center font-bold text-gray-400 mt-1">Hello, {username}</span>}
+            {!noToken && <span className="text-center font-bold text-gray-400 mt-1">Hello, {user.username}</span>}
             </div>
             <div className="flex items-center justify-center">
 

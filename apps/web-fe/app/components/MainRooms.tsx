@@ -1,19 +1,14 @@
 "use client"
 
 import { PlusCircleIcon } from "lucide-react";
-import { Room } from "../dashboard/page";
 import RoomComponent from "./RoomComponent";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
+import { LayoutContext } from "../dashboard/layout";
 
-export default function MainRooms ({user, setActiveCreateRoom}: {user: {
-    username: string, 
-    id: string , 
-    email: string, 
-    rooms: Room[]
-}, setActiveCreateRoom: Dispatch<SetStateAction<boolean>>}) {
-
+export default function MainRooms ({ setActiveCreateRoom}: {setActiveCreateRoom: Dispatch<SetStateAction<boolean>>}) {
+    const user = useContext(LayoutContext).user;
     return (
-        <div className="m-2 w-full pt-4 pb-4 pl-5 pr-5">
+        <div className="m-2 w-[100%] pt-4 pb-4 pl-5 pr-5">
             <div className="flex justify-between items-center">
                 <h2 className="font-bold text-2xl text-gray-400 ml-1.5 text-center">Existing Spaces</h2>
 

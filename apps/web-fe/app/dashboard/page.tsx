@@ -17,27 +17,23 @@ export interface Room {
 
 export default function Dashboard() {
     const [activeCreateRoom, setActiveCreateRoom] = useState<boolean>(false);
-    const {user} = useContext(LayoutContext);
-     return (
-        <div className="bg-gray-900 text-white h-screen w-screen overflow-auto">
-            <div className="flex h-[91%]">
+    return (
+        <div className="h-full w-full flex overflow-hidden text-white">
             <MainSideBar />
-            <div className="bg-[#191919] w-[80%] flex">
-                {
-                    activeCreateRoom &&
+            <div className="bg-[#191919] flex-1 h-full relative">
+                {activeCreateRoom && (
                     <>
-                    <div 
-                    onClick={() => setActiveCreateRoom(false)}
-                    className="fixed w-full h-full bg-gray-300 opacity-50">
-                    </div> 
-                    <div className="z-50 fixed top-[30%] left-[50%]">
-                    <CreateRoomComponent setActiveCreateRoom={setActiveCreateRoom}/>
-                    </div>
+                        <div
+                          onClick={() => setActiveCreateRoom(false)}
+                          className="fixed inset-0 bg-gray-300 opacity-50"
+                        />
+                        <div className="z-50 fixed top-[30%] left-[50%]">
+                            <CreateRoomComponent setActiveCreateRoom={setActiveCreateRoom} />
+                        </div>
                     </>
-                }
-                <MainRooms user={user} setActiveCreateRoom={setActiveCreateRoom}/>
+                )}
+                <MainRooms setActiveCreateRoom={setActiveCreateRoom}/>
             </div>
-        </div>
         </div>
     )
 }

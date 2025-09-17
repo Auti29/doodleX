@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 export default function MainSideBar(){
     const router = useRouter();
     return (
-        <div className="w-[20%] bg-[#222222] h-full border-r border-gray-500 flex flex-col justify-between items-center">
+        <div className="w-[18%] bg-[#222222] h-full border-r border-gray-500 flex flex-col justify-between items-center">
             <div className="ml-8 mt-5 w-[90%]">
                 <span className="text-xs text-gray-400 font-bold font-sans">ORGANIZATION</span>
                 <div className=" flex flex-col w-[95%] mt-2 text-gray-300 text-sm font-bold">

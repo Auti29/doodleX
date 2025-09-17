@@ -61,19 +61,22 @@ export default function Layout({children}: {children: React.ReactNode}) {
                         Authorization:`Bearer ${token}`
                     }});
                     const data = res.data;
+                    console.log(res.data)
                     setUser(data.user);
                 } 
         
                 fetchUser();
             }, []);
         
-    return (<>
-    <div className="bg-[#222222] w-screen">
-    <NavBar  username={user.username} noToken={false}/>
-    </div>
-    <LayoutContext.Provider value={{user, setUser, noToken, setNoToken}}>
-    {children}
-    </LayoutContext.Provider>
-    
-    </>)
+    return (
+        <div className="h-screen w-screen flex flex-col overflow-hidden">
+            <LayoutContext.Provider value={{user, setUser, noToken, setNoToken}}>
+                <NavBar />
+                <div className="flex-1 overflow-hidden">
+                    {children}
+                </div>
+            </LayoutContext.Provider>
+        </div>
+
+    )
 }
