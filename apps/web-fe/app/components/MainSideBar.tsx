@@ -1,4 +1,4 @@
-import { DiameterIcon, LogOut, MessageCircleMoreIcon, ReceiptPoundSterlingIcon, Users2 } from "lucide-react";
+import { DiameterIcon, LogOut, LogOutIcon, MessageCircleMoreIcon, ReceiptPoundSterlingIcon, Users2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function MainSideBar(){
@@ -13,11 +13,21 @@ export default function MainSideBar(){
                     <span className="w-full p-2 mt-1 mb-1 border-0 rounded-md flex items-center hover:text-white hover:bg-[#121211]"><span className="mr-3"><ReceiptPoundSterlingIcon /></span>Billing</span>
                 </div>
             </div>
+             <div className="w-full flex justify-center items-center flex-col">
+                <div className="w-[95%] text-sm font-bold mb-3">
+                    <button 
+                    onClick={() => {
+                        localStorage.clear();
+                        router.push('../signin');
+                    }}
+                    className="cursor-pointer border border-red-500 w-full p-2 flex justify-center items-center rounded-lg text-red-500 hover:bg-[#121211] hover:text-red-500"><LogOutIcon className="mr-3"/>Logout</button>
+                </div>
              <div className="w-[95%] text-sm font-bold mb-5">
                     <button
                     onClick={() => router.push('../dashboard/feedback')} 
                     className="cursor-pointer border border-gray-500 w-full p-2 flex justify-center items-center rounded-lg text-gray-300 hover:bg-[#121211] hover:text-white"><MessageCircleMoreIcon className="mr-3"/>Feedback</button>
                 </div>
+             </div>
         </div>
     )
 }
