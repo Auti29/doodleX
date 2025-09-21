@@ -15,7 +15,8 @@ interface UserI {
 
 
 //todo: add a singleton for state management
-const users: UserI[] = [];
+let users: UserI[] = [];
+let activeUsers: number = 0;
 
 const checkUser: (arg: string) => string | null = (token: string) =>  {
     try{
@@ -35,8 +36,10 @@ const checkUser: (arg: string) => string | null = (token: string) =>  {
 
     }
 
+
 wss.on('connection', (socket, request) => {
     const url = request.url;
+    console.log(users.length);
     if(!url) return;
     const queryParams = new URLSearchParams(url.split("?")[1]);
     const token = queryParams.get('token'); 
@@ -57,8 +60,28 @@ wss.on('connection', (socket, request) => {
         rooms: []
     });
 
+
     socket.on('message', async (data) => {
         const parsedData = JSON.parse(data as unknown as string); 
+
+        if(parsedData.type === "get_users"){
+            const roomId = parsedData.roomId;
+            if(!roomId) return;
+
+            users.forEach(user => {
+                if(user.rooms.includes(roomId)) activeUsers++;
+            });
+
+            users.forEach(user => {
+                    if(user.rooms.includes(roomId)) {
+                        user.ws.send(JSON.stringify({
+                            type: "active_users",
+                            activeUsers 
+                        }));
+                    }
+            });
+        }
+
         if(parsedData.type === "join_room"){
             const currUser = users.find(u => u.ws == socket);
             currUser?.rooms.push(parsedData.roomId);
@@ -67,6 +90,7 @@ wss.on('connection', (socket, request) => {
         if(parsedData.type === "leave_room"){
             const currUser = users.find(u => u.ws == socket);
             if(!currUser) return;
+            //@ts-ignore
             currUser.rooms = currUser?.rooms.filter(r => r !== parsedData.roomId);
         }
 
@@ -132,7 +156,13 @@ wss.on('connection', (socket, request) => {
         }
     }); 
 
+    socket.on("close",  () => {
+        activeUsers && activeUsers--;
+        users = users.filter(user => user.ws != socket);
+    });
+
 });
+
 
 
 
@@ -172,4 +202,11 @@ wss.on('connection', (socket, request) => {
 //     type: deleteChat, 
 //     roomId: "abc123", 
 //      message: "ping pong"
+// }
+
+
+//get active users
+// {
+//     type: getUsers
+//     roomId: "room123"
 // }

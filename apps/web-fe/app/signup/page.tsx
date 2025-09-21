@@ -1,6 +1,6 @@
 "use client"
 import axios, { AxiosError } from "axios";
-import AuthPageCard from "../../app/components/AuthPageCard";
+import AuthPageCard from "../../components/AuthPageCard";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 

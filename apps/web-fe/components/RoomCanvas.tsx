@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Canvas from "./Canvas";
-const WS_URL: string = process.env.NEXT_PUBLIC_WS_URL!;
+import { getSocketConn } from "@/utils/socket";
 
 
 export default function RoomCanvas({roomId}: {roomId: string}) {
@@ -18,7 +18,8 @@ export default function RoomCanvas({roomId}: {roomId: string}) {
         else {
             token = localStorage.getItem('token') as string;
         }
-        const ws = new WebSocket(`${WS_URL}?token=${token}`);
+        const ws = getSocketConn(token);
+        if(ws)
         ws.onopen = () => {
             setSocket(ws);
             ws.send(JSON.stringify({

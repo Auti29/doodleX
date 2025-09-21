@@ -1,8 +1,39 @@
 "use client"
 
+import { getSocketConn } from "@/utils/socket";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function RoomComponent({slug, roomId, description}: {slug: string, roomId:number, description?: string}) {
+
+    const [activeUsers, setActiveUsers] = useState<number | null>(null);
+
+    const handleMsg = function(ev: any) {
+        const msg = JSON.parse(ev.data);
+        if(msg.type === "active_users"){
+            setActiveUsers(msg.activeUsers);
+        }
+    
+    }
+
+    useEffect(() => {
+        let token = localStorage.getItem('token') as string;
+        const ws = getSocketConn(token);
+        if(ws)
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: "get_users", 
+                roomId
+            }));
+        }
+
+        ws?.addEventListener("message", handleMsg);
+
+
+        return ws?.removeEventListener("message", handleMsg);
+    }, []);
+    
+
     return (
         <div className="bg-[#161616] border-1 border-gray-500 p-4 flex flex-col flex-wrap justify-center rounded-lg m-2 w-[30%]">
             <div className="flex items-center">
@@ -17,7 +48,7 @@ export default function RoomComponent({slug, roomId, description}: {slug: string
                     className="relative inline-flex h-3 w-3 m-auto rounded-full bg-green-500"
                     ></span>
             </span>
-                <span className="font-bold font-mono">1 Active users</span>
+                <span className="font-bold font-mono">{activeUsers ? `${activeUsers} Active users` :"1 Active users"}</span>
             </span>
             </div>
             <div className="text-gray-300 text-sm my-2">

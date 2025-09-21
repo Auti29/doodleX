@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import TopBar from "./TopBar";
-import { Game } from "../draw/Game";
+import { Game } from "../app/draw/Game";
 
 export type Tools = "Circle" | "Rect" | "Line" | "Text" | "Eraser" | "Pencil";
 

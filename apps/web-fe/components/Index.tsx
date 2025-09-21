@@ -36,7 +36,7 @@ function Index() {
               </button>
               </Link>
               <Link target="_blank" href={'https://github.com/Auti29/doodleX'}>
-              <button className='border-2 border-gray-400 rounded-lg pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer bg-black hover:bg-gray-800 flex text-xs justify-center items-center' 
+              <button className='border-2 border-gray-400 rounded-lg pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer bg-black flex text-xs justify-center items-center' 
               ><GithubIcon size={23} className='bg-black text-white p-1'/><span className='font-mono'>Github</span></button>
               </Link>
             </div>

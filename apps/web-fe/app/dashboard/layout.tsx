@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
-import NavBar from "../components/Navbar"
+import NavBar from "../../components/Navbar"
 import { Room } from "./page";
 import axios from "axios";
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;

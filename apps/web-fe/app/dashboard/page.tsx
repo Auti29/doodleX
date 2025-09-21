@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react";
-import CreateRoomComponent from "../components/CreateRoomComponent";
-import MainRooms from "../components/MainRooms";
-import MainSideBar from "../components/MainSideBar";
+import CreateRoomComponent from "../../components/CreateRoomComponent";
+import MainRooms from "../../components/MainRooms";
+import MainSideBar from "../../components/MainSideBar";
 
 export interface Room {
     id: number, 

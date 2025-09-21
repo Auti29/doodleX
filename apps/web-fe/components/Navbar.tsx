@@ -1,6 +1,6 @@
 import { UserRoundIcon } from "lucide-react";
 import Logo from "./Logo";
-import { LayoutContext } from "../dashboard/layout";
+import { LayoutContext } from "../app/dashboard/layout";
 import { useContext } from "react";
 
 export default function NavBar () {

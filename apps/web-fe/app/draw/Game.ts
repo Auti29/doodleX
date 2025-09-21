@@ -1,5 +1,5 @@
 import { getExistingShapes } from "./fetchData";
-import { Tools } from "../components/Canvas";
+import { Tools } from "../../components/Canvas";
 
 type Rect =  {
     type: "rect", 

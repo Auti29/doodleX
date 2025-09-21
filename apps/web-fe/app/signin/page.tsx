@@ -2,9 +2,9 @@
 
 
 import axios from "axios"
-import AuthPageCard from "../../app/components/AuthPageCard"
+import AuthPageCard from "../../components/AuthPageCard"
 import { useRouter } from "next/navigation";
-import Logo from "../components/Logo";
+import Logo from "../../components/Logo";
 import Image from "next/image";
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
 
