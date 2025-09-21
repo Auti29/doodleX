@@ -9,6 +9,7 @@ export default function RoomComponent({slug, roomId, description}: {slug: string
     const [activeUsers, setActiveUsers] = useState<number | null>(null);
 
     const handleMsg = function(ev: any) {
+        console.log("handlemg")
         const msg = JSON.parse(ev.data);
         if(msg.type === "active_users"){
             setActiveUsers(msg.activeUsers);
@@ -22,6 +23,10 @@ export default function RoomComponent({slug, roomId, description}: {slug: string
         if(ws)
         ws.onopen = () => {
             ws.send(JSON.stringify({
+                type: "join_room", 
+                roomId
+            }));
+            ws.send(JSON.stringify({
                 type: "get_users", 
                 roomId
             }));
@@ -33,6 +38,7 @@ export default function RoomComponent({slug, roomId, description}: {slug: string
         return ws?.removeEventListener("message", handleMsg);
     }, []);
     
+    // console.log(activeUsers);
 
     return (
         <div className="bg-[#161616] border-1 border-gray-500 p-4 flex flex-col flex-wrap justify-center rounded-lg m-2 w-[30%]">
@@ -48,7 +54,7 @@ export default function RoomComponent({slug, roomId, description}: {slug: string
                     className="relative inline-flex h-3 w-3 m-auto rounded-full bg-green-500"
                     ></span>
             </span>
-                <span className="font-bold font-mono">{activeUsers ? `${activeUsers} Active users` :"1 Active users"}</span>
+                <span className="font-bold font-mono">{activeUsers ? `${activeUsers} Active users` :"0 Active users"}</span>
             </span>
             </div>
             <div className="text-gray-300 text-sm my-2">

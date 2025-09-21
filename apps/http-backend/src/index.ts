@@ -17,6 +17,7 @@ app.post("/api/v1/createRoom", authMiddleware, async (req, res) => {
     try{
 
         const parsedData = RoomSchema.safeParse(req.body);
+        
          if(!parsedData){
              return res.status(411).json({
                  message: 'incorrect format!!'
@@ -24,6 +25,8 @@ app.post("/api/v1/createRoom", authMiddleware, async (req, res) => {
          }
      
          const userId = (req as authRequest).userId;
+
+         console.log(parsedData.data);
          
          const roomExists  = await prismaClient.room.findFirst({
              where: {

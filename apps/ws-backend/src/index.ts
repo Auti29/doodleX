@@ -39,7 +39,7 @@ const checkUser: (arg: string) => string | null = (token: string) =>  {
 
 wss.on('connection', (socket, request) => {
     const url = request.url;
-    console.log(users.length);
+    // console.log(users.length);
     if(!url) return;
     const queryParams = new URLSearchParams(url.split("?")[1]);
     const token = queryParams.get('token'); 
@@ -65,14 +65,15 @@ wss.on('connection', (socket, request) => {
         const parsedData = JSON.parse(data as unknown as string); 
 
         if(parsedData.type === "get_users"){
+            console.log("reached");
             const roomId = parsedData.roomId;
-            if(!roomId) return;
-
-            users.forEach(user => {
+            if(roomId) {
+                users.forEach(user => {
                 if(user.rooms.includes(roomId)) activeUsers++;
             });
+            console.log(activeUsers);
 
-            users.forEach(user => {
+            users?.forEach(user => {
                     if(user.rooms.includes(roomId)) {
                         user.ws.send(JSON.stringify({
                             type: "active_users",
@@ -80,11 +81,15 @@ wss.on('connection', (socket, request) => {
                         }));
                     }
             });
+            }
+
+            
         }
 
         if(parsedData.type === "join_room"){
             const currUser = users.find(u => u.ws == socket);
             currUser?.rooms.push(parsedData.roomId);
+            
         }
 
         if(parsedData.type === "leave_room"){
@@ -155,11 +160,6 @@ wss.on('connection', (socket, request) => {
             });
         }
     }); 
-
-    socket.on("close",  () => {
-        activeUsers && activeUsers--;
-        users = users.filter(user => user.ws != socket);
-    });
 
 });
 

@@ -17,6 +17,7 @@ export default function RoomCanvas({roomId}: {roomId: string}) {
         }
         else {
             token = localStorage.getItem('token') as string;
+            console.log(token);
         }
         const ws = getSocketConn(token);
         if(ws)

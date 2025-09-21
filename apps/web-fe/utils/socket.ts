@@ -12,8 +12,9 @@ export function getSocketConn(token: string){
 
     if(!token) return;
     
-
     socket = new WebSocket(`${WS_URL}?token=${token}`);
+
+    console.log("called");
 
     return socket;
 }

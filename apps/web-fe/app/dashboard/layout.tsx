@@ -61,7 +61,6 @@ export default function Layout({children}: {children: React.ReactNode}) {
                         Authorization:`Bearer ${token}`
                     }});
                     const data = res.data;
-                    console.log(res.data)
                     setUser(data.user);
                 } 
         
