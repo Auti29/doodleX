@@ -48,7 +48,7 @@ export default function AuthPageCard({isSignup, buttonTxt, headingTxt, handleSig
             <input
              onChange={(e) => setEmail(e.target.value)}
              value={email}
-             className="border border-gray-300 rounded-xl  p-2 m-auto w-full" type="text" placeholder="your@email.com" />
+             className="border border-gray-300 rounded-xl  p-2 m-auto w-full" type="text" placeholder="johndoe@gmail.com" />
             </div>}
 
             <div className="mt-2.5  mb-1.5 w-[100%] flex flex-col justify-center">
