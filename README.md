@@ -4,7 +4,7 @@
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 | Category     | Technologies                                                                                                                                        |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -15,7 +15,7 @@
 
 ---
 
-## ✨ Features
+## Features
 
 - Real-time collaborative canvas using WebSockets
 - Multi-user drawing synchronization
@@ -24,7 +24,7 @@
 
 ---
 
-## 🖼️ Screenshots
+## Screenshots
 
 | Dashboard                                               | Canvas Collaboration                              |
 | ------------------------------------------------------- | ------------------------------------------------- |
@@ -32,7 +32,7 @@
 
 ---
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
 ```bash
 # Clone the repository
